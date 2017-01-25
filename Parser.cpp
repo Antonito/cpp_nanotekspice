@@ -142,6 +142,7 @@ namespace nts
     section->children = new std::vector<t_ast_node *>();
     section->lexeme += input_char;
 
+    // Get the name (must be "chipsets")
     char nameBuf[9];
     m_str.get(nameBuf, 8);
     std::string name(nameBuf);
@@ -154,5 +155,198 @@ namespace nts
 
     section->lexeme += name;
     section->value = name;
+
+    // Check that it is followed by a ':'
+    input_char = m_str.get();
+    if (input_char != ':')
+      {
+	throw new std::exception(); // TODO: create specific exception
+      }
+    section->lexeme += input_char;
+
+    while (true)
+      {
+	input_char = m_str.peek();
+	switch (input_char)
+	  {
+	  // End of file or new Section
+	  case 'EOF':
+	  case '.':
+	    return (section);
+	  // Newline
+	  case '\n':
+	    section->child.push_back(this->createTreeNewline(m_str.get()));
+	    break;
+	  // Space
+	  case ' ':
+	  case '\t':
+	    break;
+	  // Chipset
+	  default:
+	    section->child.push_back(this->createTreeChipset());
+	  }
+      }
   }
+
+  t_ast_node *Parser::createTreeLinksSection(int input_char)
+  {
+    t_ast_node *section = new t_ast_node();
+
+    // Node creation
+    section->type = SECTION;
+    section->children = new std::vector<t_ast_node *>();
+    section->lexeme += input_char;
+
+    // Get the name (must be "links")
+    char nameBuf[6];
+    m_str.get(nameBuf, 5);
+    std::string name(nameBuf);
+
+    // Check if the section name is good
+    if (name != "links")
+      {
+	throw new std::exception(); // TODO: create specific exception
+      }
+
+    section->lexeme += name;
+    section->value = name;
+
+    // Check that it is followed by a ':'
+    input_char = m_str.get();
+    if (input_char != ':')
+      {
+	throw new std::exception(); // TODO: create specific exception
+      }
+    section->lexeme += input_char;
+
+    while (true)
+      {
+	input_char = m_str.peek();
+	switch (input_char)
+	  {
+	  // End of file or new Section
+	  case 'EOF':
+	  case '.':
+	    return (section);
+	  // Newline
+	  case '\n':
+	    section->child.push_back(this->createTreeNewline(m_str.get()));
+	    break;
+	  // Space
+	  case ' ':
+	  case '\t':
+	    break;
+	  // Chipset
+	  default:
+	    section->child.push_back(this->createTreeLink());
+	  }
+      }
+  }
+
+  t_ast_node *Parser::createTreeChipset()
+  {
+    int peek = m_str.peek();
+
+    switch (peek)
+      {
+      case 'i':
+      case 'c':
+	return (this->createTreeInputChipset());
+      case 't':
+      case 'f':
+      case 'o':
+	return (this->createTreeNormalChipset());
+      default:
+	throw new std::exception(); // TODO: create specific exception
+      }
+  }
+
+  t_ast_node *Parser::createTreeLink()
+  {
+    t_ast_node *link = new t_ast_node();
+    int         input_char;
+    int         nbLinkEnd = 0;
+
+    // Node creation
+    link->type = LINK;
+    link->children = new std::vector<t_ast_node *>();
+
+    while (true)
+      {
+	input_char = m_str.peek();
+	switch (input_char)
+	  {
+	  case ' ':
+	  case '\t':
+	    break;
+	  case '\n':
+	    link->children.push_back(this->createTreeNewline(m_str.get()));
+	  case 'EOF':
+	    throw new std::exception(); // TODO: create specific exception
+	  default:
+	    nbLinkEnd++;
+	    link->children.push_back(this->createTreeLinkEnd());
+	    if (nbLinkEnd == 2)
+	      {
+		return (link);
+	      }
+	  }
+      }
+  }
+
+  t_ast_node *Parser::createTreeLinkEnd()
+  {
+    t_ast_node *end = new t_ast_node();
+    int         input_char;
+    int         nbLinkEnd = 0;
+
+    // Node creation
+    end->type = LINK;
+    end->children = new std::vector<t_ast_node *>();
+
+    // Get name
+    while (true)
+      {
+	input_char = m_str.get();
+
+	if (input_char == EOF)
+	  {
+	    throw new std::exception(); // TODO: create specific exception
+	  }
+
+	if (input_char == ':')
+	  {
+	    break;
+	  }
+	if (std::isalnum(input_char))
+	  {
+	    end->lexeme += input_char;
+	    end->value += input_char;
+	  }
+	else
+	  {
+	    throw new std::exception(); // TODO: create specific exception
+	  }
+      }
+
+    while (true)
+      {
+	input_char = m_str.peek();
+	switch (input_char)
+	  {
+	  case '\n':
+	    end->children.push_back(this->createTreeNewline(m_str.get()));
+	    break;
+	  case ' ':
+	  case '\t':
+	    break;
+	  case EOF:
+	    throw new std::exception(); // TODO: create specific exception
+	  default:
+	    end->children.push_back(this->createTreeString());
+	    return (end);
+	  }
+      }
+  }
+  
 }
