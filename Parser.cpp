@@ -3,12 +3,14 @@
 
 namespace nts
 {
-  Parser::Parser() : m_index(0)
+  Parser::Parser()
   {
   }
 
-  Parser::Parser(Parser const &other) : m_str(other.m_str), m_index(0)
+  Parser::Parser(Parser const &other)
   {
+    m_str.str("");
+    m_str << other.m_str.str();
   }
 
   Parser::~Parser()
@@ -19,8 +21,8 @@ namespace nts
   {
     if (this != &other)
       {
-	m_str = other.m_str;
-	m_index = other.m_index;
+	m_str.str("");
+	m_str << other.m_str.str();
       }
     return (*this);
   }
@@ -40,11 +42,11 @@ namespace nts
 
   t_ast_node *Parser::createTree()
   {
-    t_ast_node *root = new t_ast_node();
+    t_ast_node *root = new t_ast_node(nullptr);
     int         inputChar;
 
     // Node creation
-    root->type = DEFAULT;
+    root->type = ASTNodeType::DEFAULT;
     root->children = new std::vector<t_ast_node *>();
     root->lexeme = m_str.str();
 
@@ -53,10 +55,6 @@ namespace nts
 	inputChar = m_str.get();
 	switch (inputChar)
 	  {
-	  // Comment
-	  case '#':
-	    root->children->push_back(this->createTreeComment(inputChar));
-	    break;
 	  // Section
 	  case '.':
 	    root->children->push_back(this->createTreeSection(inputChar));
@@ -80,28 +78,6 @@ namespace nts
       }
   }
 
-  t_ast_node *Parser::createTreeComment(int inputChar)
-  {
-    t_ast_node *comment = new t_ast_node();
-
-    // Node creation
-    comment->type = COMMENT;
-    comment->children = nullptr;
-    comment->lexeme += inputChar;
-
-    while (true)
-      {
-	intput_char = m_str.peek();
-	if (inputChar == '\n' || inputChar == EOF)
-	  {
-	    return (comment);
-	  }
-	comment->lexeme += inputChar;
-	comment->value += inputChar;
-	m_str.get();
-      }
-  }
-
   t_ast_node *Parser::createTreeSection(int inputChar)
   {
     int peek = m_str.peek();
@@ -110,7 +86,7 @@ namespace nts
       {
 	return (this->createTreeChipsetsSection(inputChar));
       }
-    else if (peek = 'l')
+    else if (peek == 'l')
       {
 	return (this->createTreeLinksSection(inputChar));
       }
@@ -122,10 +98,10 @@ namespace nts
 
   t_ast_node *Parser::createTreeNewline(int inputChar)
   {
-    t_ast_node *newline = new t_ast_node();
+    t_ast_node *newline = new t_ast_node(nullptr);
 
     // Node creation
-    newline->type = NEWLINE;
+    newline->type = ASTNodeType::NEWLINE;
     newline->children = nullptr;
     newline->lexeme += inputChar;
     newline->value += inputChar;
@@ -135,10 +111,10 @@ namespace nts
 
   t_ast_node *Parser::createTreeChipsetsSection(int inputChar)
   {
-    t_ast_node *section = new t_ast_node();
+    t_ast_node *section = new t_ast_node(nullptr);
 
     // Node creation
-    section->type = SECTION;
+    section->type = ASTNodeType::SECTION;
     section->children = new std::vector<t_ast_node *>();
     section->lexeme += inputChar;
 
@@ -170,12 +146,12 @@ namespace nts
 	switch (inputChar)
 	  {
 	  // End of file or new Section
-	  case 'EOF':
+	  case EOF:
 	  case '.':
 	    return (section);
 	  // Newline
 	  case '\n':
-	    section->child.push_back(this->createTreeNewline(m_str.get()));
+	    section->children->push_back(this->createTreeNewline(m_str.get()));
 	    break;
 	  // Space
 	  case ' ':
@@ -183,17 +159,17 @@ namespace nts
 	    break;
 	  // Chipset
 	  default:
-	    section->child.push_back(this->createTreeChipset());
+	    section->children->push_back(this->createTreeChipset());
 	  }
       }
   }
 
   t_ast_node *Parser::createTreeLinksSection(int inputChar)
   {
-    t_ast_node *section = new t_ast_node();
+    t_ast_node *section = new t_ast_node(nullptr);
 
     // Node creation
-    section->type = SECTION;
+    section->type = ASTNodeType::SECTION;
     section->children = new std::vector<t_ast_node *>();
     section->lexeme += inputChar;
 
@@ -225,12 +201,12 @@ namespace nts
 	switch (inputChar)
 	  {
 	  // End of file or new Section
-	  case 'EOF':
+	  case EOF:
 	  case '.':
 	    return (section);
 	  // Newline
 	  case '\n':
-	    section->child.push_back(this->createTreeNewline(m_str.get()));
+	    section->children->push_back(this->createTreeNewline(m_str.get()));
 	    break;
 	  // Space
 	  case ' ':
@@ -238,7 +214,7 @@ namespace nts
 	    break;
 	  // Chipset
 	  default:
-	    section->child.push_back(this->createTreeLink());
+	    section->children->push_back(this->createTreeLink());
 	  }
       }
   }
@@ -263,12 +239,12 @@ namespace nts
 
   t_ast_node *Parser::createTreeLink()
   {
-    t_ast_node *link = new t_ast_node();
+    t_ast_node *link = new t_ast_node(nullptr);
     int         inputChar;
     int         nbLinkEnd = 0;
 
     // Node creation
-    link->type = LINK;
+    link->type = ASTNodeType::LINK;
     link->children = new std::vector<t_ast_node *>();
 
     while (true)
@@ -281,7 +257,7 @@ namespace nts
 	    break;
 	  case '\n':
 	    link->children->push_back(this->createTreeNewline(m_str.get()));
-	  case 'EOF':
+	  case EOF:
 	    throw new std::exception(); // TODO: create specific exception
 	  default:
 	    nbLinkEnd++;
@@ -296,12 +272,12 @@ namespace nts
 
   t_ast_node *Parser::createTreeLinkEnd()
   {
-    t_ast_node *end = new t_ast_node();
+    t_ast_node *end = new t_ast_node(nullptr);
     int         inputChar;
     int         nbLinkEnd = 0;
 
     // Node creation
-    end->type = LINK;
+    end->type = ASTNodeType::LINK_END;
     end->children = new std::vector<t_ast_node *>();
 
     // Get name
@@ -351,11 +327,11 @@ namespace nts
 
   t_ast_node *Parser::createTreeString()
   {
-    t_ast_node *str = new t_ast_node();
+    t_ast_node *str = new t_ast_node(nullptr);
     int         inputChar;
 
     // Node creation
-    str->type = STRING;
+    str->type = ASTNodeType::STRING;
     str->children = nullptr;
 
     while (true)
@@ -376,11 +352,11 @@ namespace nts
 
   t_ast_node *Parser::createTreeInputChipset()
   {
-    t_ast_node *chipset = new t_ast_node();
+    t_ast_node *chipset = new t_ast_node(nullptr);
     int         inputChar;
 
     // Node creation
-    chipset->type = CHIPSET;
+    chipset->type = ASTNodeType::COMPONENT;
     chipset->children = new std::vector<t_ast_node *>();
 
     std::string name;
@@ -389,7 +365,7 @@ namespace nts
     // name should be "input" or "clock" (5 char each)
     char nameBuf[6];
 
-    m_str.get(name, 5);
+    m_str.get(nameBuf, 5);
     name = std::string(nameBuf);
 
     if (name != "input" && name != "clock")
@@ -417,9 +393,6 @@ namespace nts
 	    break;
 	  case '\n':
 	    throw new std::exception(); // TODO: create specific exception
-	  case '#':
-	    chipset->children->push_back(this->createTreeComment(m_str.get()));
-	    break;
 	  default:
 	    chipset->children->push_back(this->createTreeString());
 	    gettingName = false;
@@ -436,8 +409,6 @@ namespace nts
 	  case '\t':
 	    break;
 	  case '\n':
-	  case '#':
-	    return (chipset);
 	  case '(':
 	    m_str.get();
 	    chipset->children->push_back(this->createTreeString());
@@ -451,13 +422,13 @@ namespace nts
       }
   }
 
-  t_ast_node *Parser::createTreeInputChipset()
+  t_ast_node *Parser::createTreeNormalChipset()
   {
-    t_ast_node *chipset = new t_ast_node();
+    t_ast_node *chipset = new t_ast_node(nullptr);
     int         inputChar;
 
     // Node creation
-    chipset->type = CHIPSET;
+    chipset->type = ASTNodeType::COMPONENT;
     chipset->children = new std::vector<t_ast_node *>();
 
     std::string name;
@@ -468,7 +439,7 @@ namespace nts
 	// name should be "true"
 	char nameBuf[5];
 
-	m_str.get(name, 4);
+	m_str.get(nameBuf, 4);
 	name = std::string(nameBuf);
 
 	if (name != "true")
@@ -481,7 +452,7 @@ namespace nts
 	// name should be "false"
 	char nameBuf[6];
 
-	m_str.get(name, 5);
+	m_str.get(nameBuf, 5);
 	name = std::string(nameBuf);
 
 	if (name != "false")
@@ -494,7 +465,7 @@ namespace nts
 	// name should be "output"
 	char nameBuf[7];
 
-	m_str.get(name, 6);
+	m_str.get(nameBuf, 6);
 	name = std::string(nameBuf);
 
 	if (name != "output")
@@ -520,7 +491,6 @@ namespace nts
 	  case '\t':
 	    break;
 	  case '\n':
-	  case '#':
 	    throw new std::exception(); // TODO: create specific exception
 	  default:
 	    chipset->children->push_back(this->createTreeString());

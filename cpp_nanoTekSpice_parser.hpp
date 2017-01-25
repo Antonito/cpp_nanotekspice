@@ -11,7 +11,7 @@
 namespace nts
 {
   enum class ASTNodeType : int
-  {
+  {	
     DEFAULT = -1,
     NEWLINE = 0,
     SECTION,
@@ -38,7 +38,7 @@ namespace nts
     virtual void feed(std::string const &input) = 0;
     virtual void parseTree(t_ast_node &root) = 0;
     virtual t_ast_node *createTree() = 0;
-    virtual ~IParser();
+    virtual ~IParser(){};
   };
 }
 

@@ -1,6 +1,8 @@
 #ifndef PARSER_HPP_
 #define PARSER_HPP_
 
+#include <string>
+#include <sstream>
 #include "cpp_nanoTekSpice_parser.hpp"
 
 namespace nts
@@ -19,7 +21,6 @@ namespace nts
     virtual t_ast_node *createTree();
 
   private:
-    t_ast_node *createTreeComment(int input_char);
     t_ast_node *createTreeSection(int input_char);
     t_ast_node *createTreeNewline(int input_char);
     t_ast_node *createTreeChipsetsSection(int input_char);

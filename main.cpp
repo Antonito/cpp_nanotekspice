@@ -2,12 +2,13 @@
 #include <sstream>
 #include <iostream>
 #include "cpp_nanoTekSpice_parser.hpp"
+#include "Parser.hpp"
 
 int main()
 {
   std::ifstream     file("config.ini");
   std::stringstream ss;
-  nts::IParser      parser = Parser();
+  nts::Parser       parser;
 
   ss << file.rdbuf();
   parser.feed(ss.str());
