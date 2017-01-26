@@ -51,6 +51,9 @@ namespace nts
     root->children = new std::vector<t_ast_node *>();
     root->lexeme = m_str.str();
 
+    this->clearInput();
+    std::cout << m_str.str() << std::endl;
+
     while (true)
       {
 	inputChar = m_str.get();
@@ -221,10 +224,12 @@ namespace nts
 	  // Space
 	  case ' ':
 	  case '\t':
+	    m_str.get();
 	    break;
 	  // Chipset
 	  default:
 	    section->children->push_back(this->createTreeLink());
+	    break;
 	  }
       }
   }
@@ -426,5 +431,37 @@ namespace nts
 	    return (chipset);
 	  }
       }
+  }
+
+  void Parser::clearInput()
+  {
+    char              inputChar;
+    char              lastChar = 0;
+    std::stringstream clear;
+
+    while (true)
+      {
+	inputChar = m_str.get();
+	if (inputChar == EOF)
+	  {
+	    break;
+	  }
+
+	if (inputChar == '#')
+	  {
+	    while (inputChar != EOF && inputChar != '\n')
+	      inputChar = m_str.get();
+	    clear << '\n';
+	  }
+	else if ((inputChar != ' ' && inputChar != '\t') ||
+	         (lastChar != ' ' && lastChar != '\t'))
+	  {
+	    clear << inputChar;
+	  }
+	lastChar = inputChar;
+      }
+    m_str.str("");
+    m_str.clear();
+    m_str << clear.str();
   }
 }

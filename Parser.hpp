@@ -29,6 +29,7 @@ namespace nts
     t_ast_node *      createTreeLinkEnd();
     t_ast_node *      createTreeString();
     t_ast_node *      createTreeChipset();
+    void              clearInput();
     std::stringstream m_str;
   };
 }
