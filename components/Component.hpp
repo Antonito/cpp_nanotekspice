@@ -4,7 +4,7 @@
 #include <string>
 #include <iostream>
 #include <array>
-#include <pair>
+#include <utility>
 #include "IComponent.hpp"
 
 namespace nts
@@ -53,7 +53,7 @@ namespace nts
     virtual void Dump(void) const
     {
       std::cout << m_name << ": [";
-      for (nts::Tristate &s : m_out)
+      for (nts::Tristate const &s : m_out)
 	{
 	  if (&s != &m_out[0])
 	    std::cout << ", ";
@@ -63,11 +63,11 @@ namespace nts
     }
 
   protected:
-    std::Array<std::pair<nts::IComponent *, size_t>, input> m_in;
-    std::Array<nts::Tristate, output> m_out;
-    std::Array<bool, output>          m_compute;
+    std::array<std::pair<nts::IComponent *, size_t>, input> m_in;
+    std::array<nts::Tristate, output> m_out;
+    std::array<bool, output>          m_compute;
     std::string m_name;
-  }
+  };
 }
 
 #endif // !COMPONENT_HPP_

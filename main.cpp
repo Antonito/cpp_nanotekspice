@@ -15,5 +15,7 @@ int main()
 
   nts::t_ast_node *root = parser.createTree();
 
+  (void)root;
+
   return 0;
 }

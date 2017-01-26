@@ -33,7 +33,7 @@ namespace nts
     m_str << input;
   }
 
-  void Parser::parseTree(t_ast_node &root)
+  void Parser::parseTree(t_ast_node &)
   {
   }
 
@@ -274,7 +274,6 @@ namespace nts
   {
     t_ast_node *end = new t_ast_node(nullptr);
     int         inputChar;
-    int         nbLinkEnd = 0;
 
     // Node creation
     end->type = ASTNodeType::LINK_END;

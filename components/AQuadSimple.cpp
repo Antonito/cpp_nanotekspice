@@ -2,6 +2,10 @@
 
 namespace nts
 {
+  AQuadSimple::AQuadSimple(std::string const &name) : Component(name)
+  {
+  }
+
   nts::Tristate AQuadSimple::Compute(size_t pin)
   {
     nts::Tristate result = nts::UNDEFINED;
@@ -23,7 +27,7 @@ namespace nts
     else
       p = pin - 7;
     // If this pin is already computing, return last result
-    if (compute[p])
+    if (m_compute[p])
       {
 	return (m_out[p]);
       }
@@ -32,17 +36,17 @@ namespace nts
     m_compute[p] = true;
 
     // Compute the two inputs
-    nts::Tristate a = m_in[2 * p]->first->Compute(m_in[2 * p]->second);
-    nts::Tristate b = m_in[2 * p + 1]->first->Compute(m_in[2 * p + 1]->second);
+    nts::Tristate a = m_in[2 * p].first->Compute(m_in[2 * p].second);
+    nts::Tristate b = m_in[2 * p + 1].first->Compute(m_in[2 * p + 1].second);
 
     // If both are defined, compute the result
     if (a != nts::UNDEFINED && b != nts::UNDEFINED)
       {
-	result = this->operation(a, b)
+	result = this->operation(a, b);
       }
 
     // Computing is finished for this pin
-    m_counter[p] = false;
+    m_compute[p] = false;
     m_out[p] = result;
     return (result);
   }
@@ -69,7 +73,7 @@ namespace nts
     else
       p = pin - 5;
 
-    m_in[p]->first = &comp;
-    m_in[p]->second = target;
+    m_in[p].first = &comp;
+    m_in[p].second = target;
   }
 }
