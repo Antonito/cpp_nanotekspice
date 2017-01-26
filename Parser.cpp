@@ -1,3 +1,4 @@
+#include <iostream>
 #include <stdexcept>
 #include "Parser.hpp"
 
@@ -72,6 +73,7 @@ namespace nts
 	    break;
 	  // Other
 	  default:
+	    std::cout << "Invalid character in root creation" << std::endl;
 	    throw new std::exception(); // TODO: create specific exception
 	    break;
 	  }
@@ -92,6 +94,8 @@ namespace nts
       }
     else
       {
+	std::cout << "Section name beggining with unknown character"
+	          << std::endl;
 	throw new std::exception(); // TODO: create specific exception
       }
   }
@@ -120,12 +124,14 @@ namespace nts
 
     // Get the name (must be "chipsets")
     char nameBuf[9];
-    m_str.get(nameBuf, 8);
+    m_str.get(nameBuf, 9);
     std::string name(nameBuf);
 
     // Check if the section name is good
     if (name != "chipsets")
       {
+	std::cout << "Section name is '" << name << "' instead of 'chipsets'"
+	          << std::endl;
 	throw new std::exception(); // TODO: create specific exception
       }
 
@@ -136,6 +142,7 @@ namespace nts
     inputChar = m_str.get();
     if (inputChar != ':')
       {
+	std::cout << "Missing ':' after '.chipsets'" << std::endl;
 	throw new std::exception(); // TODO: create specific exception
       }
     section->lexeme += inputChar;
@@ -175,12 +182,14 @@ namespace nts
 
     // Get the name (must be "links")
     char nameBuf[6];
-    m_str.get(nameBuf, 5);
+    m_str.get(nameBuf, 6);
     std::string name(nameBuf);
 
     // Check if the section name is good
     if (name != "links")
       {
+	std::cout << "Section name is '" << name << "' instead of 'links'"
+	          << std::endl;
 	throw new std::exception(); // TODO: create specific exception
       }
 
@@ -191,6 +200,7 @@ namespace nts
     inputChar = m_str.get();
     if (inputChar != ':')
       {
+	std::cout << "Missing ':' after '.links'" << std::endl;
 	throw new std::exception(); // TODO: create specific exception
       }
     section->lexeme += inputChar;
@@ -219,24 +229,6 @@ namespace nts
       }
   }
 
-  t_ast_node *Parser::createTreeChipset()
-  {
-    int peek = m_str.peek();
-
-    switch (peek)
-      {
-      case 'i':
-      case 'c':
-	return (this->createTreeInputChipset());
-      case 't':
-      case 'f':
-      case 'o':
-	return (this->createTreeNormalChipset());
-      default:
-	throw new std::exception(); // TODO: create specific exception
-      }
-  }
-
   t_ast_node *Parser::createTreeLink()
   {
     t_ast_node *link = new t_ast_node(nullptr);
@@ -254,10 +246,13 @@ namespace nts
 	  {
 	  case ' ':
 	  case '\t':
+	    m_str.get();
 	    break;
 	  case '\n':
 	    link->children->push_back(this->createTreeNewline(m_str.get()));
+	    break;
 	  case EOF:
+	    std::cout << "Unexpected EOF in link creation" << std::endl;
 	    throw new std::exception(); // TODO: create specific exception
 	  default:
 	    nbLinkEnd++;
@@ -287,6 +282,8 @@ namespace nts
 
 	if (inputChar == EOF)
 	  {
+	    std::cout << "Unexpected EOF in link_end creation (1)"
+	              << std::endl;
 	    throw new std::exception(); // TODO: create specific exception
 	  }
 
@@ -301,6 +298,8 @@ namespace nts
 	  }
 	else
 	  {
+	    std::cout << "Unexpected character in link_end creation"
+	              << std::endl;
 	    throw new std::exception(); // TODO: create specific exception
 	  }
       }
@@ -317,6 +316,8 @@ namespace nts
 	  case '\t':
 	    break;
 	  case EOF:
+	    std::cout << "Unexpected EOF in link_end creation (2)"
+	              << std::endl;
 	    throw new std::exception(); // TODO: create specific exception
 	  default:
 	    end->children->push_back(this->createTreeString());
@@ -350,7 +351,7 @@ namespace nts
       }
   }
 
-  t_ast_node *Parser::createTreeInputChipset()
+  t_ast_node *Parser::createTreeChipset()
   {
     t_ast_node *chipset = new t_ast_node(nullptr);
     int         inputChar;
@@ -359,26 +360,24 @@ namespace nts
     chipset->type = ASTNodeType::COMPONENT;
     chipset->children = new std::vector<t_ast_node *>();
 
-    std::string name;
-    inputChar = m_str.peek();
-
-    // name should be "input" or "clock" (5 char each)
-    char nameBuf[6];
-
-    m_str.get(nameBuf, 5);
-    name = std::string(nameBuf);
-
-    if (name != "input" && name != "clock")
+    while (true)
       {
-	throw new std::exception(); // TODO: create specific exception
+	inputChar = m_str.peek();
+	if (std::isalnum(inputChar))
+	  {
+	    chipset->lexeme += inputChar;
+	    chipset->value += inputChar;
+	    m_str.get();
+	  }
+	else
+	  break;
       }
-
-    chipset->lexeme += name;
-    chipset->value += name;
 
     inputChar = m_str.peek();
     if (inputChar != ' ' && inputChar != '\t')
       {
+	std::cout << "Missing space or tab after input chipset type"
+	          << std::endl;
 	throw new std::exception(); // TODO: create specific exception
       }
 
@@ -390,8 +389,11 @@ namespace nts
 	  {
 	  case ' ':
 	  case '\t':
+	    m_str.get();
 	    break;
 	  case '\n':
+	    std::cout << "Unexpected EOL in input chipset creation"
+	              << std::endl;
 	    throw new std::exception(); // TODO: create specific exception
 	  default:
 	    chipset->children->push_back(this->createTreeString());
@@ -409,91 +411,18 @@ namespace nts
 	  case '\t':
 	    break;
 	  case '\n':
+	    return (chipset);
 	  case '(':
 	    m_str.get();
 	    chipset->children->push_back(this->createTreeString());
 	    inputChar = m_str.get();
 	    if (inputChar != ')')
 	      {
+		std::cout
+		    << "Missing ')' after input chipset value declaration"
+		    << std::endl;
 		throw new std::exception(); // TODO: create specific exception
 	      }
-	    return (chipset);
-	  }
-      }
-  }
-
-  t_ast_node *Parser::createTreeNormalChipset()
-  {
-    t_ast_node *chipset = new t_ast_node(nullptr);
-    int         inputChar;
-
-    // Node creation
-    chipset->type = ASTNodeType::COMPONENT;
-    chipset->children = new std::vector<t_ast_node *>();
-
-    std::string name;
-    inputChar = m_str.peek();
-
-    if (inputChar == 't')
-      {
-	// name should be "true"
-	char nameBuf[5];
-
-	m_str.get(nameBuf, 4);
-	name = std::string(nameBuf);
-
-	if (name != "true")
-	  {
-	    throw new std::exception(); // TODO: create specific exception
-	  }
-      }
-    else if (inputChar == 'f')
-      {
-	// name should be "false"
-	char nameBuf[6];
-
-	m_str.get(nameBuf, 5);
-	name = std::string(nameBuf);
-
-	if (name != "false")
-	  {
-	    throw new std::exception(); // TODO: create specific exception
-	  }
-      }
-    else
-      {
-	// name should be "output"
-	char nameBuf[7];
-
-	m_str.get(nameBuf, 6);
-	name = std::string(nameBuf);
-
-	if (name != "output")
-	  {
-	    throw new std::exception(); // TODO: create specific exception
-	  }
-      }
-    chipset->lexeme += name;
-    chipset->value += name;
-
-    inputChar = m_str.peek();
-    if (inputChar != ' ' && inputChar != '\t')
-      {
-	throw new std::exception(); // TODO: create specific exception
-      }
-
-    while (true)
-      {
-	inputChar = m_str.peek();
-	switch (inputChar)
-	  {
-	  case ' ':
-	  case '\t':
-	    break;
-	  case '\n':
-	    throw new std::exception(); // TODO: create specific exception
-	  default:
-	    chipset->children->push_back(this->createTreeString());
 	    return (chipset);
 	  }
       }
