@@ -1,16 +1,12 @@
 # Definitions for Makefile
-NAME=			gkrellm
-
-INC_DIR=		-I.	\
-			-I./components
-
+NAME=			nts
 
 DEBUG=			no
 
 MODE=
 
-LOCAL_COMP_FLAGS=	-pipe
+LOCAL_COMP_FLAGS=
 
-LOCAL_LINK_FLAGS=	-pthread -lncurses -lsfml-graphics -lsfml-window -lsfml-system
+LOCAL_LINK_FLAGS=
 
 LOCAL_DEBUG_FLAGS=

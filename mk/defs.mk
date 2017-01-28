@@ -31,8 +31,16 @@ SANITIZER=	-fsanitize=address			\
 		-fsanitize=unsigned-integer-overflow	\
 		-fsanitize=vla-bound
 
+LDFLAGS+=	$(LOCAL_LINK_FLAGS)
+
+EMPTY=
+
+VPATH=		$(subst $(EMPTY) $(EMPTY),:,$(addprefix ./,$(strip $(FOLDERS))))
+
+INC_DIR=	$(patsubst %,-I%,$(subst :, ,$(VPATH)))
+
 # Compilation and link definitions
-CXX=		g++
+CXX=		clang++
 CPP_VER=	c++14
 
 # Debug Infos
@@ -55,5 +63,3 @@ CXXFLAGS+=	-std=$(CPP_VER) -W -Wall -Wextra	\
 		-fstack-protector			\
 		$(INC_DIR)				\
 		$(LOCAL_COMP_FLAGS)
-
-LDFLAGS+=	$(LOCAL_LINK_FLAGS)
