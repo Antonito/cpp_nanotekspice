@@ -21,10 +21,10 @@ namespace nts
     };
 
     explicit Pin(Mode mode, AGate *gate = nullptr);
-    Pin(Pin const &other);
+    Pin(Pin const &other) = delete;
     ~Pin();
 
-    Pin &operator=(Pin const &other);
+    Pin &operator=(Pin const &other) = delete;
 
     Mode          getMode() const;
     nts::Tristate getValue();

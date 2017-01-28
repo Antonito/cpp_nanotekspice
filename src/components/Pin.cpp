@@ -13,23 +13,8 @@ namespace nts
     assert(mode <= INPUT || gate != nullptr);
   }
 
-  Pin::Pin(Pin const &)
-  {
-#ifdef DEBUG
-    static_assert(false, "You are not supposed to copy a pin");
-#endif
-  }
-
   Pin::~Pin()
   {
-  }
-
-  Pin &Pin::operator=(Pin const &)
-  {
-#ifdef DEBUG
-    static_assert(false, "You are not supposed to copy a pin");
-#endif
-    return (*this);
   }
 
   Pin::Mode Pin::getMode() const

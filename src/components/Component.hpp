@@ -1,6 +1,7 @@
 #ifndef COMPONENT_HPP_
 #define COMPONENT_HPP_
 
+#include <cassert>
 #include <string>
 #include <iostream>
 #include <array>
@@ -14,15 +15,10 @@ namespace nts
   class Component : public IComponent
   {
   public:
+    Component(Component const &) = delete;
     virtual ~Component(){};
 
-    Component &operator=(Component const &)
-    {
-#ifdef DEBUG
-      static_assert(false, "You are not supposed to assign component");
-#endif
-      return (*this);
-    }
+    Component &operator=(Component const &) = delete;
 
     Pin *&operator[](size_t t)
     {
@@ -69,13 +65,6 @@ namespace nts
   protected:
     Component(std::string const &type) : m_type(type)
     {
-    }
-
-    Component(Component const &)
-    {
-#ifdef DEBUG
-      static_assert(false, "You are not supposed to copy component");
-#endif
     }
 
     std::array<Pin *, pinsNumber> m_pins;
