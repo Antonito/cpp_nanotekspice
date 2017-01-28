@@ -44,7 +44,7 @@ namespace nts
   t_ast_node *Parser::createTree()
   {
     t_ast_node *root = new t_ast_node(nullptr);
-    int         inputChar;
+    char        inputChar;
 
     // Node creation
     root->type = ASTNodeType::DEFAULT;
@@ -83,7 +83,7 @@ namespace nts
       }
   }
 
-  t_ast_node *Parser::createTreeSection(int inputChar)
+  t_ast_node *Parser::createTreeSection(char inputChar)
   {
     int peek = m_str.peek();
 
@@ -103,7 +103,7 @@ namespace nts
       }
   }
 
-  t_ast_node *Parser::createTreeNewline(int inputChar)
+  t_ast_node *Parser::createTreeNewline(char inputChar)
   {
     t_ast_node *newline = new t_ast_node(nullptr);
 
@@ -116,7 +116,7 @@ namespace nts
     return (newline);
   }
 
-  t_ast_node *Parser::createTreeChipsetsSection(int inputChar)
+  t_ast_node *Parser::createTreeChipsetsSection(char inputChar)
   {
     t_ast_node *section = new t_ast_node(nullptr);
 
@@ -174,7 +174,7 @@ namespace nts
       }
   }
 
-  t_ast_node *Parser::createTreeLinksSection(int inputChar)
+  t_ast_node *Parser::createTreeLinksSection(char inputChar)
   {
     t_ast_node *section = new t_ast_node(nullptr);
 
@@ -237,7 +237,7 @@ namespace nts
   t_ast_node *Parser::createTreeLink()
   {
     t_ast_node *link = new t_ast_node(nullptr);
-    int         inputChar;
+    char        inputChar;
     int         nbLinkEnd = 0;
 
     // Node creation
@@ -273,7 +273,7 @@ namespace nts
   t_ast_node *Parser::createTreeLinkEnd()
   {
     t_ast_node *end = new t_ast_node(nullptr);
-    int         inputChar;
+    char        inputChar;
 
     // Node creation
     end->type = ASTNodeType::LINK_END;
@@ -333,7 +333,7 @@ namespace nts
   t_ast_node *Parser::createTreeString()
   {
     t_ast_node *str = new t_ast_node(nullptr);
-    int         inputChar;
+    char        inputChar;
 
     // Node creation
     str->type = ASTNodeType::STRING;
@@ -358,7 +358,7 @@ namespace nts
   t_ast_node *Parser::createTreeChipset()
   {
     t_ast_node *chipset = new t_ast_node(nullptr);
-    int         inputChar;
+    char        inputChar;
 
     // Node creation
     chipset->type = ASTNodeType::COMPONENT;

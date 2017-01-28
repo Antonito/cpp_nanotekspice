@@ -21,10 +21,10 @@ namespace nts
     virtual t_ast_node *createTree();
 
   private:
-    t_ast_node *createTreeSection(int input_char);
-    t_ast_node *createTreeNewline(int input_char);
-    t_ast_node *createTreeChipsetsSection(int input_char);
-    t_ast_node *createTreeLinksSection(int input_char);
+    t_ast_node *createTreeSection(char input_char);
+    t_ast_node *createTreeNewline(char input_char);
+    t_ast_node *createTreeChipsetsSection(char input_char);
+    t_ast_node *createTreeLinksSection(char	 input_char);
     t_ast_node *      createTreeLink();
     t_ast_node *      createTreeLinkEnd();
     t_ast_node *      createTreeString();
