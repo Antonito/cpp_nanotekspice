@@ -5,7 +5,7 @@
 
 namespace nts
 {
-  class ANDGate : AGate
+  class ANDGate : public AGate
   {
   public:
     ANDGate();

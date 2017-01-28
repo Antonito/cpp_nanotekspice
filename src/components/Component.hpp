@@ -14,20 +14,7 @@ namespace nts
   class Component : public IComponent
   {
   public:
-    Component(std::string const &type) : m_type(type)
-    {
-    }
-
-    Component(Component const &)
-    {
-#ifdef DEBUG
-      static_assert(false, "You are not supposed to copy component");
-#endif
-    }
-
-    ~Component()
-    {
-    }
+    virtual ~Component(){};
 
     Component &operator=(Component const &)
     {
@@ -37,13 +24,13 @@ namespace nts
       return (*this);
     }
 
-    Pin const *operator[](size_t t)
+    Pin *&operator[](size_t t)
     {
       if (t < 1 || t > pinsNumber)
 	{
 	  throw std::logic_error("There is no such pin");
 	}
-      return (m_pins[t]);
+      return (m_pins[t - 1]);
     }
 
     /// Compute value of the precised pin
@@ -80,6 +67,17 @@ namespace nts
     }
 
   protected:
+    Component(std::string const &type) : m_type(type)
+    {
+    }
+
+    Component(Component const &)
+    {
+#ifdef DEBUG
+      static_assert(false, "You are not supposed to copy component");
+#endif
+    }
+
     std::array<Pin *, pinsNumber> m_pins;
     std::string m_type;
   };
