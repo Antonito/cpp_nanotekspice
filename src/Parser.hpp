@@ -23,6 +23,9 @@ namespace nts
     virtual void parseTree(t_ast_node &root);
     virtual t_ast_node *createTree();
 
+    std::map<std::string, Input *> const &     getInput() const;
+    std::map<std::string, IComponent *> const &getComponent() const;
+    std::map<std::string, IComponent *>        getOutput() const;
   private:
     void parseChipsets(t_ast_node &section);
     void parseLinks(t_ast_node &section);

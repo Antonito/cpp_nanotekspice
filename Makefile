@@ -11,7 +11,8 @@ include $(MK_DIR)colors.mk $(MK_DIR)local_defs.mk $(MK_DIR)defs.mk
 
 # Project's files
 SRC_FILES=	main.cpp		\
-		Parser.cpp
+		Parser.cpp		\
+		Simulator.cpp
 
 COMPONENT_FILES= Pin.cpp		\
 		ComponentFactory.cpp	\

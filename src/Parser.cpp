@@ -66,7 +66,7 @@ namespace nts
 		    throw std::logic_error(
 		        ".links section before ./chipsets section");
 		  }
-		this->parseChipsets(*child);
+		this->parseLinks(*child);
 		link = true;
 	      }
 	    break;
@@ -190,7 +190,7 @@ namespace nts
 	  }
       }
 
-    if (n != 1)
+    if (n != 2)
       throw std::logic_error("Lexical or syntaxic error");
 
     try
@@ -206,8 +206,8 @@ namespace nts
   std::pair<IComponent *, size_t> Parser::parseLinkEnd(t_ast_node &link)
   {
     std::pair<IComponent *, size_t> res;
-    std::string val[2];
-    int         n = 0;
+    std::string val;
+    std::string name = link.value;
 
     for (t_ast_node *child : *link.children)
       {
@@ -216,35 +216,31 @@ namespace nts
 	  case ASTNodeType::NEWLINE:
 	    break;
 	  case ASTNodeType::STRING:
-	    if (n > 1)
+	    if (val != "")
 	      throw std::logic_error("Lexical or syntaxic error");
-	    val[n] = child->value;
-	    n++;
+	    val = child->value;
 	    break;
 	  default:
 	    throw std::logic_error("Lexical or syntaxic error");
 	  }
       }
 
-    if (n != 1)
-      throw std::logic_error("Lexical or syntaxic error");
-
-    if (m_input.find(val[0]) != m_input.end())
-      res.first = m_input[val[0]];
-    else if (m_component.find(val[0]) != m_component.end())
-      res.first = m_component[val[0]];
-    else if (m_output.find(val[0]) != m_output.end())
+    if (m_input.find(name) != m_input.end())
+      res.first = m_input[name];
+    else if (m_component.find(name) != m_component.end())
+      res.first = m_component[name];
+    else if (m_output.find(name) != m_output.end())
       {
-	res.first = m_output[val[0]].first;
-	m_output[val[0]].second = true;
+	res.first = m_output[name].first;
+	m_output[name].second = true;
       }
     else
       throw std::logic_error("A component name is unknown");
 
-    for (char c : val[1])
+    for (char c : val)
       if (std::isdigit(c) == false)
 	throw std::logic_error("Lexical or syntaxic error");
-    res.second = std::atoi(val[1].c_str());
+    res.second = std::atoi(val.c_str());
     return (res);
   }
 
@@ -673,5 +669,26 @@ namespace nts
     m_str.str("");
     m_str.clear();
     m_str << clear.str();
+  }
+
+  std::map<std::string, Input *> const &Parser::getInput() const
+  {
+    return (m_input);
+  }
+
+  std::map<std::string, IComponent *> const &Parser::getComponent() const
+  {
+    return (m_component);
+  }
+
+  std::map<std::string, IComponent *> Parser::getOutput() const
+  {
+    std::map<std::string, IComponent *> res;
+
+    for (auto &e : m_output)
+      {
+	res[e.first] = e.second.first;
+      }
+    return (res);
   }
 }

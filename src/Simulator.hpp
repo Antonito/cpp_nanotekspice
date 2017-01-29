@@ -13,14 +13,13 @@ namespace nts
   {
   public:
     explicit Simulator(std::string const &configFileName);
+    Simulator(Simulator const &other) = delete;
     ~Simulator();
+    Simulator &operator=(Simulator const &other) = delete;
 
   private:
-    Simulator(Simulator const &other);
-    Simulator &operator=(Simulator const &other);
-
-    std::map<std::string, InputComponent *> m_input;
-    std::vector<IComponent *> m_chipsets;
+    std::map<std::string, Input *>      m_input;
+    std::map<std::string, IComponent *> m_component;
     std::map<std::string, IComponent *> m_output;
   };
 }

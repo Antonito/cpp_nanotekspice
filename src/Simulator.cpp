@@ -1,3 +1,6 @@
+#include <fstream>
+#include <sstream>
+#include <iostream>
 #include "Simulator.hpp"
 
 namespace nts
@@ -9,7 +12,9 @@ namespace nts
     if (file.is_open())
       {
 	Parser            parser;
-	std::stringstream ss = file.rdbuf();
+	std::stringstream ss;
+
+	ss << file.rdbuf();
 
 	parser.feed(ss.str());
 	file.close();
@@ -18,7 +23,7 @@ namespace nts
 
 	parser.parseTree(*root);
 	m_input = parser.getInput();
-	m_chipsets = parser.getChipsets();
+	m_component = parser.getComponent();
 	m_output = parser.getOutput();
       }
     else
@@ -27,19 +32,7 @@ namespace nts
       }
   }
 
-  Simulator::Simulator(Simulator const &other)
-  {
-  }
-
   Simulator::~Simulator()
   {
-  }
-
-  Simulator &Simulator::operator=(Simulator const &other)
-  {
-    if (this != &other)
-      {
-      }
-    return (*this);
   }
 }
