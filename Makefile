@@ -21,7 +21,12 @@ COMPONENT_FILES= Pin.cpp		\
 		Output.cpp
 
 GATES_FILES=	AGate.cpp		\
-		ANDGate.cpp
+		ANDGate.cpp		\
+		ORGate.cpp		\
+		NANDGate.cpp		\
+		NORGate.cpp		\
+		XORGate.cpp		\
+		NOTGate.cpp
 
 EXCEPTION_FILES= LexicalOrSyntacticError.cpp	\
 		InvalidPin.cpp			\

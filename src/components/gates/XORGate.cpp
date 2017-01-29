@@ -6,7 +6,7 @@ namespace nts
   {
   }
 
-  nts::Tristate ANDGate::doOperation()
+  nts::Tristate XORGate::doOperation()
   {
     Tristate a = m_pins[0]->getValue();
     Tristate b = m_pins[1]->getValue();
