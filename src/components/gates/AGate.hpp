@@ -3,10 +3,11 @@
 
 #include <string>
 #include "Component.hpp"
+#include "IOperable.hpp"
 
 namespace nts
 {
-  class AGate : public Component<3>
+  class AGate : public Component<3>, public IOperable
   {
   public:
     AGate(std::string const &type);

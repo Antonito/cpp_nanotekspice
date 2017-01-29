@@ -5,7 +5,7 @@
 
 namespace nts
 {
-  Pin::Pin(Mode mode, AGate *gate)
+  Pin::Pin(Mode mode, IOperable *gate)
       : m_link(std::make_pair<IComponent *, size_t>(nullptr, 0)), m_mode(mode),
         m_gate(gate), m_lastValue(nts::UNDEFINED), m_computing(false)
   {

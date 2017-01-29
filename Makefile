@@ -15,6 +15,8 @@ SRC_FILES=	main.cpp		\
 
 COMPONENT_FILES= Pin.cpp		\
 		ComponentFactory.cpp	\
+		Input.cpp		\
+		Output.cpp
 
 GATES_FILES=	AGate.cpp		\
 		ANDGate.cpp

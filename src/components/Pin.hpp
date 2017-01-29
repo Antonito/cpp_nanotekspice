@@ -4,6 +4,7 @@
 #include <vector>
 #include <utility>
 #include <ostream>
+#include "IOperable.hpp"
 
 namespace nts
 {
@@ -20,7 +21,7 @@ namespace nts
       OUTPUT
     };
 
-    explicit Pin(Mode mode, AGate *gate = nullptr);
+    explicit Pin(Mode mode, IOperable *gate = nullptr);
     Pin(Pin const &other) = delete;
     ~Pin();
 
@@ -35,7 +36,7 @@ namespace nts
   private:
     std::pair<IComponent *, size_t> m_link;
     Mode          m_mode;
-    AGate *       m_gate;
+    IOperable *   m_gate;
     nts::Tristate m_lastValue;
     bool          m_computing;
   };

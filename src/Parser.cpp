@@ -1,6 +1,7 @@
 #include <iostream>
 #include <stdexcept>
 #include "Parser.hpp"
+#include "Output.hpp"
 
 namespace nts
 {
@@ -33,8 +34,218 @@ namespace nts
     m_str << input;
   }
 
-  void Parser::parseTree(t_ast_node &)
+  void Parser::parseTree(t_ast_node &root)
   {
+    bool chipset = false;
+    bool link = false;
+
+    for (t_ast_node *child : *root.children)
+      {
+	switch (child->type)
+	  {
+	  case ASTNodeType::NEWLINE:
+	    break;
+	  case ASTNodeType::SECTION:
+	    if (child->value == "chipsets")
+	      {
+		if (chipset)
+		  {
+		    throw std::logic_error("Multiple .chipsets section");
+		  }
+		this->parseChipsets(*child);
+		chipset = true;
+	      }
+	    else if (child->value == "links")
+	      {
+		if (link)
+		  {
+		    throw std::logic_error("Multiple .links section");
+		  }
+		if (!chipset)
+		  {
+		    throw std::logic_error(
+		        ".links section before ./chipsets section");
+		  }
+		this->parseChipsets(*child);
+		link = true;
+	      }
+	    break;
+	  default:
+	    throw std::logic_error("Lexical or syntaxic error");
+	  }
+      }
+    if (!chipset || !link)
+      {
+	throw std::logic_error("Missing section");
+      }
+  }
+
+  void Parser::parseChipsets(t_ast_node &section)
+  {
+    for (t_ast_node *child : *section.children)
+      {
+	switch (child->type)
+	  {
+	  case ASTNodeType::NEWLINE:
+	    break;
+	  case ASTNodeType::COMPONENT:
+	    this->parseComponent(*child);
+	    break;
+	  default:
+	    throw std::logic_error("Lexical or syntaxic error");
+	  }
+      }
+  }
+
+  void Parser::parseLinks(t_ast_node &section)
+  {
+    for (t_ast_node *child : *section.children)
+      {
+	switch (child->type)
+	  {
+	  case ASTNodeType::NEWLINE:
+	    break;
+	  case ASTNodeType::LINK:
+	    this->parseLink(*child);
+	    break;
+	  default:
+	    throw std::logic_error("Lexical or syntaxic error");
+	  }
+      }
+  }
+
+  void Parser::parseComponent(t_ast_node &component)
+  {
+    std::string type = component.value;
+    std::string name;
+    std::string value;
+
+    for (t_ast_node *child : *component.children)
+      {
+	switch (child->type)
+	  {
+	  case ASTNodeType::NEWLINE:
+	    break;
+	  case ASTNodeType::STRING:
+	    if (name == "")
+	      name = child->value;
+	    else if (value == "")
+	      value = child->value;
+	    else
+	      throw std::logic_error("Lexical or syntaxic error");
+	    break;
+	  default:
+	    throw std::logic_error("Lexical or syntaxic error");
+	  }
+      }
+
+    if (m_input.find(name) != m_input.end() ||
+        m_component.find(name) != m_component.end() ||
+        m_output.find(name) != m_output.end())
+      {
+	throw std::logic_error("Several component share the same name");
+      }
+
+    if (type == "input")
+      {
+	m_input[name] = new Input(Input::INPUT, value);
+      }
+    else if (type == "clock")
+      {
+	m_input[name] = new Input(Input::CLOCK, value);
+      }
+    else if (type == "output")
+      {
+	if (value != "")
+	  throw std::logic_error("An output cannot have a value");
+	m_output[name].first = new Output();
+	m_output[name].second = false;
+      }
+    else
+      {
+	m_component[name] = m_compFactory.createComponent(type, value);
+      }
+  }
+
+  void Parser::parseLink(t_ast_node &link)
+  {
+    std::pair<IComponent *, size_t> end[2];
+    int n = 0;
+
+    for (t_ast_node *child : *link.children)
+      {
+	switch (child->type)
+	  {
+	  case ASTNodeType::NEWLINE:
+	    break;
+	  case ASTNodeType::LINK_END:
+	    if (n > 1)
+	      throw std::logic_error("Lexical or syntaxic error");
+
+	    end[n] = this->parseLinkEnd(*child);
+	    n++;
+	    break;
+	  default:
+	    throw std::logic_error("Lexical or syntaxic error");
+	  }
+      }
+
+    if (n != 1)
+      throw std::logic_error("Lexical or syntaxic error");
+
+    try
+      {
+	end[0].first->SetLink(end[0].second, *end[1].first, end[1].second);
+      }
+    catch (std::exception &)
+      {
+	end[1].first->SetLink(end[1].second, *end[0].first, end[0].second);
+      }
+  }
+
+  std::pair<IComponent *, size_t> Parser::parseLinkEnd(t_ast_node &link)
+  {
+    std::pair<IComponent *, size_t> res;
+    std::string val[2];
+    int         n = 0;
+
+    for (t_ast_node *child : *link.children)
+      {
+	switch (child->type)
+	  {
+	  case ASTNodeType::NEWLINE:
+	    break;
+	  case ASTNodeType::STRING:
+	    if (n > 1)
+	      throw std::logic_error("Lexical or syntaxic error");
+	    val[n] = child->value;
+	    n++;
+	    break;
+	  default:
+	    throw std::logic_error("Lexical or syntaxic error");
+	  }
+      }
+
+    if (n != 1)
+      throw std::logic_error("Lexical or syntaxic error");
+
+    if (m_input.find(val[0]) != m_input.end())
+      res.first = m_input[val[0]];
+    else if (m_component.find(val[0]) != m_component.end())
+      res.first = m_component[val[0]];
+    else if (m_output.find(val[0]) != m_output.end())
+      {
+	res.first = m_output[val[0]].first;
+	m_output[val[0]].second = true;
+      }
+    else
+      throw std::logic_error("A component name is unknown");
+
+    for (char c : val[1])
+      if (std::isdigit(c) == false)
+	throw std::logic_error("Lexical or syntaxic error");
+    res.second = std::atoi(val[1].c_str());
+    return (res);
   }
 
   //

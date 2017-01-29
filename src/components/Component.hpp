@@ -1,7 +1,6 @@
 #ifndef COMPONENT_HPP_
 #define COMPONENT_HPP_
 
-#include <cassert>
 #include <string>
 #include <iostream>
 #include <array>

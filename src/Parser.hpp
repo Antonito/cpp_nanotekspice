@@ -3,7 +3,10 @@
 
 #include <string>
 #include <sstream>
+#include <map>
 #include "cpp_nanoTekSpice_parser.hpp"
+#include "ComponentFactory.hpp"
+#include "Input.hpp"
 
 namespace nts
 {
@@ -21,16 +24,27 @@ namespace nts
     virtual t_ast_node *createTree();
 
   private:
+    void parseChipsets(t_ast_node &section);
+    void parseLinks(t_ast_node &section);
+    void parseComponent(t_ast_node &component);
+    void parseLink(t_ast_node &link);
+    std::pair<IComponent *, size_t> parseLinkEnd(t_ast_node &end);
+
     t_ast_node *createTreeSection(char input_char);
     t_ast_node *createTreeNewline(char input_char);
     t_ast_node *createTreeChipsetsSection(char input_char);
-    t_ast_node *createTreeLinksSection(char	 input_char);
-    t_ast_node *      createTreeLink();
-    t_ast_node *      createTreeLinkEnd();
-    t_ast_node *      createTreeString();
-    t_ast_node *      createTreeChipset();
-    void              clearInput();
+    t_ast_node *createTreeLinksSection(char input_char);
+    t_ast_node *createTreeLink();
+    t_ast_node *createTreeLinkEnd();
+    t_ast_node *createTreeString();
+    t_ast_node *createTreeChipset();
+    void        clearInput();
+
     std::stringstream m_str;
+    ComponentFactory  m_compFactory;
+    std::map<std::string, nts::Input *>      m_input;
+    std::map<std::string, nts::IComponent *> m_component;
+    std::map<std::string, std::pair<IComponent *, bool>> m_output;
   };
 }
 
