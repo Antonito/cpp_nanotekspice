@@ -2,6 +2,7 @@
 #include <utility>
 #include "AGate.hpp"
 #include "Pin.hpp"
+#include "InvalidPin.hpp"
 
 namespace nts
 {
@@ -26,7 +27,7 @@ namespace nts
   {
     if (m_mode != INPUT && m_mode != HYBRID)
       {
-	throw std::logic_error("This pin is not an input pin");
+	throw InvalidPin("Trying to get value from an output or dead pin");
       }
     if (m_link.first != nullptr && m_computing == false)
       {
@@ -47,7 +48,7 @@ namespace nts
     if (m_mode != OUTPUT && m_mode != HYBRID)
       {
 	std::cout << "PIN: " << static_cast<int>(m_mode) << std::endl;
-	throw std::logic_error("This pin is not an output pin");
+	throw InvalidPin("Trying to compute an input or dead pin");
       }
     if (m_gate != nullptr && m_computing == false)
       {
@@ -61,7 +62,7 @@ namespace nts
   void Pin::setLink(IComponent &component, size_t pin)
   {
     if (m_mode != INPUT && m_mode != HYBRID)
-      throw std::logic_error("Cannot set a link from other than an input");
+      throw InvalidPin("Cannot set a link from an output or dead");
     m_link.first = &component;
     m_link.second = pin;
   }

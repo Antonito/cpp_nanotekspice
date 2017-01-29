@@ -3,6 +3,9 @@
 #include <iostream>
 #include <csignal>
 #include "Simulator.hpp"
+#include "BadParameter.hpp"
+#include "InvalidInput.hpp"
+#include "UnknownComponent.hpp"
 
 namespace nts
 {
@@ -40,13 +43,13 @@ namespace nts
 
 	for (auto &i : m_input)
 	  if (i.second->Compute() == nts::UNDEFINED)
-	    throw std::logic_error("Missing input value on command line");
+	    throw InvalidInput("Missing input value on command line");
 
 	signal(SIGINT, &Simulator::loopingSignal);
       }
     else
       {
-	throw std::logic_error("Invalid file name");
+	throw BadParameter("Invalid file name");
       }
   }
 
@@ -96,12 +99,12 @@ namespace nts
     while (command[i] != '=')
       {
 	if (i == command.size())
-	  throw std::logic_error("Unknown input specified in command line");
+	  throw InvalidInput("Bad input initialization");
 	name += command[i];
 	i++;
       }
     if (command.size() - i != 2 || command[i] != '=')
-      throw std::logic_error("Unknown input specified in command line");
+      throw InvalidInput("Bad input initialization");
 
     i++;
     if (command[i] == '1')
@@ -109,10 +112,10 @@ namespace nts
     else if (command[i] == '0')
       value = nts::FALSE;
     else
-      throw std::logic_error("Unknown input specified in command line");
+      throw InvalidInput("The value must be 0 or 1");
 
     if (m_input.find(name) == m_input.end())
-      throw std::logic_error("Unknown input specified in command line");
+      throw UnknownComponent("This input component cannot be found");
     m_input[name]->changeValue(value);
   }
 
@@ -120,7 +123,7 @@ namespace nts
   {
     for (auto &i : m_output)
       {
-	std::cout << i.first << " ";
+	std::cout << i.first << " = ";
 	switch (i.second->getLastValue())
 	  {
 	  case nts::TRUE:

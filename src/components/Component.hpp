@@ -7,6 +7,7 @@
 #include <utility>
 #include "IComponent.hpp"
 #include "Pin.hpp"
+#include "InvalidPin.hpp"
 
 namespace nts
 {
@@ -23,7 +24,8 @@ namespace nts
     {
       if (t < 1 || t > pinsNumber)
 	{
-	  throw std::logic_error("There is no such pin");
+	  throw InvalidPin(
+	      "Accessing component's pin with bad index (operatorp[])");
 	}
       return (m_pins[t - 1]);
     }
@@ -33,7 +35,7 @@ namespace nts
     {
       if (pin_num_this < 1 || pin_num_this > pinsNumber)
 	{
-	  throw std::logic_error("There is no such pin");
+	  throw InvalidPin("Trying to compute an invalid pin");
 	}
       return (m_pins[pin_num_this - 1]->compute());
     }
@@ -44,7 +46,7 @@ namespace nts
     {
       if (pin_num_this < 1 || pin_num_this > pinsNumber)
 	{
-	  throw std::logic_error("There is no such pin");
+	  throw InvalidPin("Trying to link an invalid pin");
 	}
       m_pins[pin_num_this - 1]->setLink(component, target);
     }

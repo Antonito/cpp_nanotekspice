@@ -3,6 +3,7 @@
 #include "ANDGate.hpp"
 #include "QuadGate.hpp"
 #include "ComponentFactory.hpp"
+#include "BadParameter.hpp"
 
 namespace nts
 {
@@ -48,7 +49,7 @@ namespace nts
   {
     if (value != "")
       {
-	throw std::logic_error("4081 chipset doesn't need input value");
+	throw BadParameter("4081 chipset doesn't need input value");
       }
     return (new QuadGate<ANDGate>("4081"));
   }

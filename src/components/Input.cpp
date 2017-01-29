@@ -1,4 +1,5 @@
 #include "Input.hpp"
+#include "BadParameter.hpp"
 
 namespace nts
 {
@@ -6,7 +7,7 @@ namespace nts
       : Component("input"), m_type(type)
   {
     if (value != "")
-      throw std::logic_error("An input doesn't need a value parameter");
+      throw BadParameter("An input doesn't need a value parameter");
     m_pins[0] = new Pin(Pin::OUTPUT, this);
     m_value = nts::UNDEFINED;
     // m_pins[0]->compute();
@@ -25,7 +26,7 @@ namespace nts
 	m_pins[0]->compute();
       }
     else
-      throw std::logic_error("You cannot set the value of a clock");
+      throw BadParameter("You cannot set the value of a clock");
   }
 
   void Input::setValue(Tristate val)

@@ -1,7 +1,9 @@
 #include <iostream>
 #include <stdexcept>
+#include "LexicalOrSyntacticError.hpp"
 #include "Parser.hpp"
 #include "Output.hpp"
+#include "InvalidInput.hpp"
 
 namespace nts
 {
@@ -50,7 +52,8 @@ namespace nts
 	      {
 		if (chipset)
 		  {
-		    throw std::logic_error("Multiple .chipsets section");
+		    throw LexicalOrSyntacticError(
+		        "Multiple .chipsets section");
 		  }
 		this->parseChipsets(*child);
 		chipset = true;
@@ -59,11 +62,11 @@ namespace nts
 	      {
 		if (link)
 		  {
-		    throw std::logic_error("Multiple .links section");
+		    throw LexicalOrSyntacticError("Multiple .links section");
 		  }
 		if (!chipset)
 		  {
-		    throw std::logic_error(
+		    throw LexicalOrSyntacticError(
 		        ".links section before ./chipsets section");
 		  }
 		this->parseLinks(*child);
@@ -71,12 +74,13 @@ namespace nts
 	      }
 	    break;
 	  default:
-	    throw std::logic_error("Lexical or syntaxic error");
+	    throw LexicalOrSyntacticError("Lexical or syntaxic error");
 	  }
       }
     if (!chipset || !link)
       {
-	throw std::logic_error("Missing section");
+	throw LexicalOrSyntacticError(
+	    "chipset or link section (or both) is missing");
       }
   }
 
@@ -92,7 +96,7 @@ namespace nts
 	    this->parseComponent(*child);
 	    break;
 	  default:
-	    throw std::logic_error("Lexical or syntaxic error");
+	    throw LexicalOrSyntacticError("Lexical or syntaxic error");
 	  }
       }
   }
@@ -109,7 +113,7 @@ namespace nts
 	    this->parseLink(*child);
 	    break;
 	  default:
-	    throw std::logic_error("Lexical or syntaxic error");
+	    throw LexicalOrSyntacticError("Lexical or syntaxic error");
 	  }
       }
   }
@@ -132,10 +136,10 @@ namespace nts
 	    else if (value == "")
 	      value = child->value;
 	    else
-	      throw std::logic_error("Lexical or syntaxic error");
+	      throw LexicalOrSyntacticError("Lexical or syntaxic error");
 	    break;
 	  default:
-	    throw std::logic_error("Lexical or syntaxic error");
+	    throw LexicalOrSyntacticError("Lexical or syntaxic error");
 	  }
       }
 
@@ -143,7 +147,7 @@ namespace nts
         m_component.find(name) != m_component.end() ||
         m_output.find(name) != m_output.end())
       {
-	throw std::logic_error("Several component share the same name");
+	throw LexicalOrSyntacticError("Several component share the same name");
       }
 
     if (type == "input")
@@ -157,7 +161,7 @@ namespace nts
     else if (type == "output")
       {
 	if (value != "")
-	  throw std::logic_error("An output cannot have a value");
+	  throw LexicalOrSyntacticError("An output cannot have a value");
 	m_output[name].first = new Output();
 	m_output[name].second = false;
       }
@@ -180,18 +184,18 @@ namespace nts
 	    break;
 	  case ASTNodeType::LINK_END:
 	    if (n > 1)
-	      throw std::logic_error("Lexical or syntaxic error");
+	      throw LexicalOrSyntacticError("Lexical or syntaxic error");
 
 	    end[n] = this->parseLinkEnd(*child);
 	    n++;
 	    break;
 	  default:
-	    throw std::logic_error("Lexical or syntaxic error");
+	    throw LexicalOrSyntacticError("Lexical or syntaxic error");
 	  }
       }
 
     if (n != 2)
-      throw std::logic_error("Lexical or syntaxic error");
+      throw LexicalOrSyntacticError("Lexical or syntaxic error");
 
     try
       {
@@ -217,11 +221,11 @@ namespace nts
 	    break;
 	  case ASTNodeType::STRING:
 	    if (val != "")
-	      throw std::logic_error("Lexical or syntaxic error");
+	      throw LexicalOrSyntacticError("Lexical or syntaxic error");
 	    val = child->value;
 	    break;
 	  default:
-	    throw std::logic_error("Lexical or syntaxic error");
+	    throw LexicalOrSyntacticError("Lexical or syntaxic error");
 	  }
       }
 
@@ -235,11 +239,11 @@ namespace nts
 	m_output[name].second = true;
       }
     else
-      throw std::logic_error("A component name is unknown");
+      throw LexicalOrSyntacticError("A component name is unknown");
 
     for (char c : val)
       if (std::isdigit(c) == false)
-	throw std::logic_error("Lexical or syntaxic error");
+	throw LexicalOrSyntacticError("Lexical or syntaxic error");
     res.second = std::atoi(val.c_str());
     return (res);
   }
@@ -282,8 +286,9 @@ namespace nts
 	    break;
 	  // Other
 	  default:
-	    std::cout << "Invalid character in root creation" << std::endl;
-	    throw new std::exception(); // TODO: create specific exception
+	    throw LexicalOrSyntacticError(
+	        "Invalid character in root"); // TODO: create specific
+	                                      // exception
 	    break;
 	  }
       }
@@ -303,9 +308,10 @@ namespace nts
       }
     else
       {
-	std::cout << "Section name beggining with unknown character"
-	          << std::endl;
-	throw new std::exception(); // TODO: create specific exception
+	throw LexicalOrSyntacticError(
+	    "Section name beggining with unknown character"); // TODO: create
+	                                                      // specific
+	                                                      // exception
       }
   }
 
@@ -339,9 +345,9 @@ namespace nts
     // Check if the section name is good
     if (name != "chipsets")
       {
-	std::cout << "Section name is '" << name << "' instead of 'chipsets'"
-	          << std::endl;
-	throw new std::exception(); // TODO: create specific exception
+	throw LexicalOrSyntacticError(
+	    std::string("Section name is '") + name +
+	    "' instead of 'chipsets'"); // TODO: create specific exception
       }
 
     section->lexeme += name;
@@ -351,8 +357,9 @@ namespace nts
     inputChar = m_str.get();
     if (inputChar != ':')
       {
-	std::cout << "Missing ':' after '.chipsets'" << std::endl;
-	throw new std::exception(); // TODO: create specific exception
+	throw LexicalOrSyntacticError(
+	    "Missing ':' after '.chipsets'"); // TODO: create specific
+	                                      // exception
       }
     section->lexeme += inputChar;
 
@@ -397,9 +404,9 @@ namespace nts
     // Check if the section name is good
     if (name != "links")
       {
-	std::cout << "Section name is '" << name << "' instead of 'links'"
-	          << std::endl;
-	throw new std::exception(); // TODO: create specific exception
+	throw LexicalOrSyntacticError(
+	    std::string("Section name is '") + name +
+	    "' instead of 'links'"); // TODO: create specific exception
       }
 
     section->lexeme += name;
@@ -409,8 +416,8 @@ namespace nts
     inputChar = m_str.get();
     if (inputChar != ':')
       {
-	std::cout << "Missing ':' after '.links'" << std::endl;
-	throw new std::exception(); // TODO: create specific exception
+	throw LexicalOrSyntacticError(
+	    "Missing ':' after '.links'"); // TODO: create specific exception
       }
     section->lexeme += inputChar;
 
@@ -463,8 +470,9 @@ namespace nts
 	    link->children->push_back(this->createTreeNewline(m_str.get()));
 	    break;
 	  case EOF:
-	    std::cout << "Unexpected EOF in link creation" << std::endl;
-	    throw new std::exception(); // TODO: create specific exception
+	    throw LexicalOrSyntacticError(
+	        "Unexpected EOF in link creation"); // TODO: create specific
+	                                            // exception
 	  default:
 	    nbLinkEnd++;
 	    link->children->push_back(this->createTreeLinkEnd());
@@ -492,9 +500,10 @@ namespace nts
 
 	if (inputChar == EOF)
 	  {
-	    std::cout << "Unexpected EOF in link_end creation (1)"
-	              << std::endl;
-	    throw new std::exception(); // TODO: create specific exception
+	    throw LexicalOrSyntacticError(
+	        "Unexpected EOF in link_end creation (1)"); // TODO: create
+	                                                    // specific
+	                                                    // exception
 	  }
 
 	if (inputChar == ':')
@@ -508,9 +517,10 @@ namespace nts
 	  }
 	else
 	  {
-	    std::cout << "Unexpected character in link_end creation"
-	              << std::endl;
-	    throw new std::exception(); // TODO: create specific exception
+	    throw LexicalOrSyntacticError(
+	        "Unexpected character in link_end creation"); // TODO: create
+	                                                      // specific
+	                                                      // exception
 	  }
       }
 
@@ -526,9 +536,10 @@ namespace nts
 	  case '\t':
 	    break;
 	  case EOF:
-	    std::cout << "Unexpected EOF in link_end creation (2)"
-	              << std::endl;
-	    throw new std::exception(); // TODO: create specific exception
+	    throw LexicalOrSyntacticError(
+	        "Unexpected EOF in link_end creation (2)"); // TODO: create
+	                                                    // specific
+	                                                    // exception
 	  default:
 	    end->children->push_back(this->createTreeString());
 	    return (end);
@@ -586,9 +597,10 @@ namespace nts
     inputChar = m_str.peek();
     if (inputChar != ' ' && inputChar != '\t')
       {
-	std::cout << "Missing space or tab after input chipset type"
-	          << std::endl;
-	throw new std::exception(); // TODO: create specific exception
+	throw LexicalOrSyntacticError(
+	    "Missing space or tab after input chipset type"); // TODO: create
+	                                                      // specific
+	                                                      // exception
       }
 
     bool gettingName = true;
@@ -602,9 +614,10 @@ namespace nts
 	    m_str.get();
 	    break;
 	  case '\n':
-	    std::cout << "Unexpected EOL in input chipset creation"
-	              << std::endl;
-	    throw new std::exception(); // TODO: create specific exception
+	    throw LexicalOrSyntacticError(
+	        "Unexpected EOL in input chipset creation"); // TODO: create
+	                                                     // specific
+	                                                     // exception
 	  default:
 	    chipset->children->push_back(this->createTreeString());
 	    gettingName = false;
@@ -628,10 +641,11 @@ namespace nts
 	    inputChar = m_str.get();
 	    if (inputChar != ')')
 	      {
-		std::cout
-		    << "Missing ')' after input chipset value declaration"
-		    << std::endl;
-		throw new std::exception(); // TODO: create specific exception
+		throw LexicalOrSyntacticError(
+		    "Missing ')' after input chipset value declaration"); // TODO:
+		// create
+		// specific
+		// exception
 	      }
 	    return (chipset);
 	  }
@@ -687,7 +701,7 @@ namespace nts
     for (auto &e : m_output)
       {
 	if (e.second.second == false)
-	  throw std::logic_error("Not every output is linked");
+	  throw InvalidInput("Not every output is linked");
 	res[e.first] = e.second.first;
       }
     return (res);
