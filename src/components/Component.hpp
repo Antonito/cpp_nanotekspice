@@ -35,7 +35,7 @@ namespace nts
 	{
 	  throw std::logic_error("There is no such pin");
 	}
-      return (m_pins[pin_num_this]->compute());
+      return (m_pins[pin_num_this - 1]->compute());
     }
 
     /// Useful to link IComponent together
@@ -46,7 +46,7 @@ namespace nts
 	{
 	  throw std::logic_error("There is no such pin");
 	}
-      m_pins[pin_num_this]->setLink(component, target);
+      m_pins[pin_num_this - 1]->setLink(component, target);
     }
 
     virtual void Dump(void) const

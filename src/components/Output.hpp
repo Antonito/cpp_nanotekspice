@@ -6,7 +6,7 @@
 
 namespace nts
 {
-  class Output : public Component<1>, public IOperable
+  class Output : public Component<1>
   {
   public:
     Output();
@@ -14,7 +14,8 @@ namespace nts
     ~Output();
 
     Output &operator=(Output const &other) = delete;
-    virtual nts::Tristate doOperation();
+    Tristate getValue();
+    Tristate getLastValue() const;
   };
 }
 

@@ -8,6 +8,8 @@ namespace nts
     if (value != "")
       throw std::logic_error("An input doesn't need a value parameter");
     m_pins[0] = new Pin(Pin::OUTPUT, this);
+    m_value = nts::UNDEFINED;
+    // m_pins[0]->compute();
   }
 
   Input::~Input()
@@ -17,8 +19,11 @@ namespace nts
 
   void Input::changeValue(Tristate val)
   {
-    if (m_type == INPUT)
-      m_value = val;
+    if (m_type == InputType::INPUT)
+      {
+	m_value = val;
+	m_pins[0]->compute();
+      }
     else
       throw std::logic_error("You cannot set the value of a clock");
   }
@@ -26,6 +31,7 @@ namespace nts
   void Input::setValue(Tristate val)
   {
     m_value = val;
+    m_pins[0]->compute();
   }
 
   void Input::update()
@@ -36,6 +42,7 @@ namespace nts
 	  m_value = FALSE;
 	else if (m_value == FALSE)
 	  m_value = TRUE;
+	m_pins[0]->compute();
       }
   }
 

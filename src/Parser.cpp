@@ -259,7 +259,6 @@ namespace nts
     root->lexeme = m_str.str();
 
     this->clearInput();
-    std::cout << m_str.str() << std::endl;
 
     while (true)
       {
@@ -681,12 +680,14 @@ namespace nts
     return (m_component);
   }
 
-  std::map<std::string, IComponent *> Parser::getOutput() const
+  std::map<std::string, Output *> Parser::getOutput() const
   {
-    std::map<std::string, IComponent *> res;
+    std::map<std::string, Output *> res;
 
     for (auto &e : m_output)
       {
+	if (e.second.second == false)
+	  throw std::logic_error("Not every output is linked");
 	res[e.first] = e.second.first;
       }
     return (res);

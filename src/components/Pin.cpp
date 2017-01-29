@@ -46,6 +46,7 @@ namespace nts
   {
     if (m_mode != OUTPUT && m_mode != HYBRID)
       {
+	std::cout << "PIN: " << static_cast<int>(m_mode) << std::endl;
 	throw std::logic_error("This pin is not an output pin");
       }
     if (m_gate != nullptr && m_computing == false)
@@ -59,6 +60,8 @@ namespace nts
 
   void Pin::setLink(IComponent &component, size_t pin)
   {
+    if (m_mode != INPUT && m_mode != HYBRID)
+      throw std::logic_error("Cannot set a link from other than an input");
     m_link.first = &component;
     m_link.second = pin;
   }
@@ -68,9 +71,13 @@ std::ostream &operator<<(std::ostream &os, nts::Pin const &p)
 {
   nts::Tristate state = p.getLastValue();
 
-  if (state == nts::UNDEFINED)
+  if (p.getMode() == nts::Pin::DEAD)
     {
-      os << "UNDEFINED";
+      os << "X";
+    }
+  else if (state == nts::UNDEFINED)
+    {
+      os << "?";
     }
   else
     {

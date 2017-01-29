@@ -4,7 +4,7 @@ namespace nts
 {
   Output::Output() : Component("Output")
   {
-    m_pins[0] = new Pin(Pin::HYBRID, this);
+    m_pins[0] = new Pin(Pin::INPUT);
   }
 
   Output::~Output()
@@ -12,8 +12,13 @@ namespace nts
     delete m_pins[0];
   }
 
-  Tristate Output::doOperation()
+  Tristate Output::getValue()
   {
     return (m_pins[0]->getValue());
+  }
+
+  Tristate Output::getLastValue() const
+  {
+    return (m_pins[0]->getLastValue());
   }
 }
