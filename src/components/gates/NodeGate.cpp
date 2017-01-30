@@ -14,8 +14,8 @@ namespace nts
     delete m_pins[1];
   }
 
-  nts::Tristate NodeGate::doOperation()
+  void NodeGate::doOperation()
   {
-    return (m_pins[0]->getValue());
+    m_pins[1]->setValue(m_pins[0]->getValue());
   }
 }

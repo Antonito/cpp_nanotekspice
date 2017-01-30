@@ -11,7 +11,7 @@ namespace nts
     ORGate();
     virtual ~ORGate(){};
 
-    virtual nts::Tristate doOperation();
+    virtual void doOperation();
   };
 }
 

@@ -6,15 +6,14 @@ namespace nts
   {
   }
 
-  nts::Tristate XORGate::doOperation()
+  void XORGate::doOperation()
   {
     Tristate a = m_pins[0]->getValue();
     Tristate b = m_pins[1]->getValue();
 
     if (a == UNDEFINED || b == UNDEFINED)
-      {
-	return (UNDEFINED);
-      }
-    return (static_cast<Tristate>(a != b));
+      m_pins[2]->setValue(UNDEFINED);
+    else
+      m_pins[2]->setValue(a != b ? nts::TRUE : nts::FALSE);
   }
 }

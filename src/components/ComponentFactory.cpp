@@ -10,6 +10,7 @@
 #include "ComponentFactory.hpp"
 #include "BadParameter.hpp"
 #include "Adder.hpp"
+#include "DualFlipFlop.hpp"
 
 namespace nts
 {
@@ -96,8 +97,7 @@ namespace nts
       {
 	throw BadParameter("4013 chipset doesn't need input value");
       }
-    throw std::exception();
-    return (nullptr); // TODO: implement
+    return (new DualFlipFlop("4013")); // TODO: implement
   }
 
   // 4017 10bits Johnson decade

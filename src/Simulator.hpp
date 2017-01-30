@@ -23,7 +23,7 @@ namespace nts
   private:
     void simulate();
     void dump() const;
-    void setInput(std::string const &command);
+    void setInput(std::string const &command, bool set = false);
     void display() const;
 
     std::map<std::string, Input *>      m_input;

@@ -20,7 +20,9 @@ COMPONENT_FILES= Pin.cpp		\
 		Input.cpp		\
 		Output.cpp		\
 		Adder.cpp		\
-		FullAdder.cpp
+		FullAdder.cpp		\
+		FlipFlop.cpp		\
+		DualFlipFlop.cpp
 
 GATES_FILES=	AGate.cpp		\
 		ANDGate.cpp		\

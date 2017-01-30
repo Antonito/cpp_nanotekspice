@@ -11,7 +11,7 @@ namespace nts
     NANDGate();
     virtual ~NANDGate(){};
 
-    virtual nts::Tristate doOperation();
+    virtual void doOperation();
   };
 }
 

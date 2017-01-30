@@ -47,8 +47,8 @@ namespace nts
       }
   }
 
-  Tristate Input::doOperation()
+  void Input::doOperation()
   {
-    return (m_value);
+    m_pins[0]->setValue(m_value);
   }
 }

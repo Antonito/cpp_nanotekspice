@@ -22,10 +22,10 @@ namespace nts
 
     Input &operator=(Input const &other) = delete;
 
-    void                  setValue(Tristate);
-    void                  changeValue(Tristate);
-    void                  update();
-    virtual nts::Tristate doOperation();
+    void         setValue(Tristate);
+    void         changeValue(Tristate);
+    void         update();
+    virtual void doOperation();
 
   private:
     InputType m_type;

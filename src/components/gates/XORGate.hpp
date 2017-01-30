@@ -11,7 +11,7 @@ namespace nts
     XORGate();
     virtual ~XORGate(){};
 
-    virtual nts::Tristate doOperation();
+    virtual void doOperation();
   };
 }
 

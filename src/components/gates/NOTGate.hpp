@@ -12,7 +12,7 @@ namespace nts
   public:
     NOTGate(std::string const &type);
     virtual ~NOTGate();
-    virtual nts::Tristate doOperation();
+    virtual void doOperation();
   };
 }
 

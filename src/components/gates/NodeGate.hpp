@@ -12,7 +12,7 @@ namespace nts
     NodeGate();
     virtual ~NodeGate();
 
-    virtual nts::Tristate doOperation();
+    virtual void doOperation();
   };
 }
 

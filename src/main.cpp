@@ -1,6 +1,6 @@
 #include "Simulator.hpp"
 
-#define TRYIT_
+#define TRYIT
 
 int main(int ac, char **av)
 {

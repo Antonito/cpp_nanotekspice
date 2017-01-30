@@ -14,14 +14,13 @@ namespace nts
     delete m_pins[1];
   }
 
-  nts::Tristate NOTGate::doOperation()
+  void NOTGate::doOperation()
   {
     Tristate a = m_pins[0]->getValue();
 
     if (a == UNDEFINED)
-      {
-	return (UNDEFINED);
-      }
-    return (a == nts::TRUE ? nts::FALSE : nts::TRUE);
+      m_pins[1]->setValue(UNDEFINED);
+    else
+      m_pins[1]->setValue(a == TRUE ? nts::FALSE : nts::TRUE);
   }
 }

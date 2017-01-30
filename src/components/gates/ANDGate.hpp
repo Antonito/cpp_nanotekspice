@@ -11,7 +11,7 @@ namespace nts
     ANDGate();
     virtual ~ANDGate(){};
 
-    virtual nts::Tristate doOperation();
+    virtual void doOperation();
   };
 }
 

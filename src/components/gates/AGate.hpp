@@ -12,7 +12,7 @@ namespace nts
   public:
     AGate(std::string const &type);
     virtual ~AGate();
-    virtual nts::Tristate doOperation() = 0;
+    virtual void doOperation() = 0;
   };
 }
 

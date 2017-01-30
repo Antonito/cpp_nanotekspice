@@ -39,7 +39,7 @@ namespace nts
 	m_output = parser.getOutput();
 
 	for (size_t i = 0; i < n; ++i)
-	  this->setInput(std::string(param[i]));
+	  this->setInput(std::string(param[i]), true);
 
 	for (auto &i : m_input)
 	  if (i.second->Compute() == nts::UNDEFINED)
@@ -90,7 +90,7 @@ namespace nts
       }
   }
 
-  void Simulator::setInput(std::string const &command)
+  void Simulator::setInput(std::string const &command, bool set)
   {
     std::string name;
     Tristate    value = nts::UNDEFINED;
@@ -116,7 +116,10 @@ namespace nts
 
     if (m_input.find(name) == m_input.end())
       throw UnknownComponent("This input component cannot be found");
-    m_input[name]->changeValue(value);
+    if (set)
+      m_input[name]->setValue(value);
+    else
+      m_input[name]->changeValue(value);
   }
 
   void Simulator::display() const

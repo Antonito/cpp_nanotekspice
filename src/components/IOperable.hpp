@@ -8,7 +8,7 @@ namespace nts
   class IOperable
   {
   public:
-    virtual nts::Tristate doOperation() = 0;
+    virtual void doOperation() = 0;
   };
 }
 

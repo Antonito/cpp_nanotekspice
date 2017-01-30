@@ -30,6 +30,7 @@ namespace nts
     Mode          getMode() const;
     nts::Tristate getValue();
     nts::Tristate getLastValue() const;
+    void setValue(Tristate value);
     nts::Tristate compute();
     void          setLink(IComponent &, size_t);
 

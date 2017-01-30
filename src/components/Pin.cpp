@@ -53,7 +53,7 @@ namespace nts
     if (m_gate != nullptr && m_computing == false)
       {
 	m_computing = true;
-	m_lastValue = m_gate->doOperation();
+	m_gate->doOperation();
 	m_computing = false;
       }
     return (m_lastValue);
@@ -65,6 +65,11 @@ namespace nts
       throw InvalidPin("Cannot set a link from an output or dead");
     m_link.first = &component;
     m_link.second = pin;
+  }
+
+  void Pin::setValue(Tristate value)
+  {
+    m_lastValue = value;
   }
 }
 
