@@ -18,7 +18,9 @@ SRC_FILES=	main.cpp		\
 COMPONENT_FILES= Pin.cpp		\
 		ComponentFactory.cpp	\
 		Input.cpp		\
-		Output.cpp
+		Output.cpp		\
+		Adder.cpp		\
+		FullAdder.cpp
 
 GATES_FILES=	AGate.cpp		\
 		ANDGate.cpp		\
@@ -26,7 +28,8 @@ GATES_FILES=	AGate.cpp		\
 		NANDGate.cpp		\
 		NORGate.cpp		\
 		XORGate.cpp		\
-		NOTGate.cpp
+		NOTGate.cpp		\
+		NodeGate.cpp
 
 EXCEPTION_FILES= LexicalOrSyntacticError.cpp	\
 		InvalidPin.cpp			\

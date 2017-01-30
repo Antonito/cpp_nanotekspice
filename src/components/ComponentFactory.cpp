@@ -9,6 +9,7 @@
 #include "QuadGate.hpp"
 #include "ComponentFactory.hpp"
 #include "BadParameter.hpp"
+#include "Adder.hpp"
 
 namespace nts
 {
@@ -75,8 +76,7 @@ namespace nts
       {
 	throw BadParameter("4008 chipset doesn't need input value");
       }
-    throw std::exception();
-    return (nullptr); // TODO: implement
+    return (new Adder("4008"));
   }
 
   // 4011 Four NAND gates
