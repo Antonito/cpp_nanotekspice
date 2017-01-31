@@ -4,11 +4,13 @@
 #include <vector>
 #include <map>
 #include <string>
-#include "Parser.hpp"
 #include "IComponent.hpp"
 
 namespace nts
 {
+  class Input;
+  class Output;
+
   class Simulator
   {
   public:
@@ -19,6 +21,7 @@ namespace nts
 
     bool command(std::string const &c);
     static void loopingSignal(int sig);
+    static size_t simId();
 
   private:
     void simulate();
@@ -29,7 +32,8 @@ namespace nts
     std::map<std::string, Input *>      m_input;
     std::map<std::string, IComponent *> m_component;
     std::map<std::string, Output *>     m_output;
-    static bool m_looping;
+    static bool   m_looping;
+    static size_t m_simId;
   };
 }
 

@@ -11,6 +11,7 @@
 #include "BadParameter.hpp"
 #include "Adder.hpp"
 #include "DualFlipFlop.hpp"
+#include "Johnson.hpp"
 
 namespace nts
 {
@@ -107,8 +108,7 @@ namespace nts
       {
 	throw BadParameter("4017 chipset doesn't need input value");
       }
-    throw std::exception();
-    return (nullptr); // TODO: implement
+    return (new Johnson("4017"));
   }
 
   // 4030 Four XOR gates

@@ -5,6 +5,7 @@
 #include <iostream>
 #include <array>
 #include <utility>
+#include "Simulator.hpp"
 #include "IComponent.hpp"
 #include "Pin.hpp"
 #include "InvalidPin.hpp"
@@ -33,11 +34,20 @@ namespace nts
     /// Compute value of the precised pin
     virtual nts::Tristate Compute(size_t pin_num_this = 1)
     {
+      Tristate s;
+
       if (pin_num_this < 1 || pin_num_this > pinsNumber)
 	{
 	  throw InvalidPin("Trying to compute an invalid pin");
 	}
-      return (m_pins[pin_num_this - 1]->compute());
+      if (m_simId != Simulator::simId())
+	{
+	  s = m_pins[pin_num_this - 1]->compute();
+	  m_simId = Simulator::simId();
+	}
+      else
+	s = m_pins[pin_num_this - 1]->getLastValue();
+      return (s);
     }
 
     /// Useful to link IComponent together
@@ -64,12 +74,13 @@ namespace nts
     }
 
   protected:
-    Component(std::string const &type) : m_type(type)
+    Component(std::string const &type) : m_type(type), m_simId(0)
     {
     }
 
     std::array<Pin *, pinsNumber> m_pins;
     std::string m_type;
+    size_t      m_simId;
   };
 }
 

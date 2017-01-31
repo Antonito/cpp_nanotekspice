@@ -2,14 +2,17 @@
 #include <sstream>
 #include <iostream>
 #include <csignal>
+#include "ComponentFactory.hpp"
 #include "Simulator.hpp"
 #include "BadParameter.hpp"
 #include "InvalidInput.hpp"
 #include "UnknownComponent.hpp"
+#include "Parser.hpp"
 
 namespace nts
 {
-  bool Simulator::m_looping = false;
+  bool   Simulator::m_looping = false;
+  size_t Simulator::m_simId = 0;
 
   void Simulator::loopingSignal(int sig)
   {
@@ -65,6 +68,7 @@ namespace nts
 
   void Simulator::simulate()
   {
+    Simulator::m_simId++;
     for (auto &i : m_output)
       i.second->getValue();
     for (auto &i : m_input)
@@ -164,5 +168,10 @@ namespace nts
       this->setInput(c);
 
     return (true);
+  }
+
+  size_t Simulator::simId()
+  {
+    return (Simulator::m_simId);
   }
 }

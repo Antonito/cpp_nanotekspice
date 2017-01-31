@@ -510,7 +510,7 @@ namespace nts
 	  {
 	    break;
 	  }
-	if (std::isalnum(inputChar))
+	if (std::isalnum(inputChar) || inputChar == '_')
 	  {
 	    end->lexeme += inputChar;
 	    end->value += inputChar;
@@ -559,7 +559,7 @@ namespace nts
     while (true)
       {
 	inputChar = m_str.peek();
-	if (std::isalnum(inputChar))
+	if (std::isalnum(inputChar) || inputChar == '_')
 	  {
 	    str->lexeme += inputChar;
 	    str->value += inputChar;
@@ -632,6 +632,7 @@ namespace nts
 	  {
 	  case ' ':
 	  case '\t':
+	    m_str.get();
 	    break;
 	  case '\n':
 	    return (chipset);
@@ -648,6 +649,8 @@ namespace nts
 		// exception
 	      }
 	    return (chipset);
+	  default:
+	    throw LexicalOrSyntacticError("Unknown character");
 	  }
       }
   }
