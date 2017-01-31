@@ -63,7 +63,7 @@ namespace nts
 		m_output[i]->setValue(nts::FALSE);
 	      }
 	  }
-	m_pins[11]->setValue(m_cout < 5 ? nts::TRUE : nts::FALSE);
+	m_pins[11]->setValue(m_count < 5 ? nts::TRUE : nts::FALSE);
 	m_count = (m_count + 1) % 10;
       }
     m_lastClk = clk;

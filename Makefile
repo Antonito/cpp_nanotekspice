@@ -23,7 +23,8 @@ COMPONENT_FILES= Pin.cpp		\
 		FullAdder.cpp		\
 		FlipFlop.cpp		\
 		DualFlipFlop.cpp	\
-		Johnson.cpp
+		Johnson.cpp		\
+		Counter.cpp
 
 GATES_FILES=	AGate.cpp		\
 		ANDGate.cpp		\

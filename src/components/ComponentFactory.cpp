@@ -12,6 +12,7 @@
 #include "Adder.hpp"
 #include "DualFlipFlop.hpp"
 #include "Johnson.hpp"
+#include "Counter.hpp"
 
 namespace nts
 {
@@ -128,8 +129,7 @@ namespace nts
       {
 	throw BadParameter("4040 chipset doesn't need input value");
       }
-    throw std::exception();
-    return (nullptr); // TODO: implement
+    return (new Counter("4040"));
   }
 
   // 4069 Six NOT gates
