@@ -40,7 +40,7 @@ VPATH=		$(subst $(EMPTY) $(EMPTY),:,$(addprefix ./,$(strip $(FOLDERS))))
 INC_DIR=	$(patsubst %,-I%,$(subst :, ,$(VPATH)))
 
 # Compilation and link definitions
-CXX=		g++
+CXX=		clang++
 CPP_VER=	c++14
 
 # Debug Infos

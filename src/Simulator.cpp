@@ -58,12 +58,6 @@ namespace nts
 
   Simulator::~Simulator()
   {
-    for (auto &i : m_input)
-      delete i.second;
-    for (auto &i : m_component)
-      delete i.second;
-    for (auto &i : m_output)
-      delete i.second;
   }
 
   void Simulator::simulate()

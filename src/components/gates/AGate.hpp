@@ -11,7 +11,7 @@ namespace nts
   {
   public:
     AGate(std::string const &type);
-    virtual ~AGate();
+    virtual ~AGate(){};
     virtual void doOperation() = 0;
   };
 }

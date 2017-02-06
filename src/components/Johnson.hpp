@@ -10,14 +10,14 @@ namespace nts
   {
   public:
     Johnson(std::string const &type);
-    virtual ~Johnson();
+    virtual ~Johnson(){};
 
     virtual void doOperation();
 
   private:
-    size_t   m_count;
-    Pin *    m_output[10];
-    Tristate m_lastClk;
+    size_t               m_count;
+    std::unique_ptr<Pin> m_output[10];
+    Tristate             m_lastClk;
   };
 }
 

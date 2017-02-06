@@ -10,14 +10,13 @@ namespace nts
   {
   public:
     ShiftRegister(std::string const &type);
-    virtual ~ShiftRegister();
+    virtual ~ShiftRegister(){};
 
     virtual void doOperation();
 
   private:
-    size_t   m_count;
-    Pin *    m_output[8];
-    Tristate m_lastClk;
+    std::unique_ptr<Pin> m_output[8];
+    Tristate             m_lastClk;
   };
 }
 

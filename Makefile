@@ -33,8 +33,7 @@ GATES_FILES=	AGate.cpp		\
 		NANDGate.cpp		\
 		NORGate.cpp		\
 		XORGate.cpp		\
-		NOTGate.cpp		\
-		NodeGate.cpp
+		NOTGate.cpp
 
 EXCEPTION_FILES= LexicalOrSyntacticError.cpp	\
 		InvalidPin.cpp			\

@@ -152,22 +152,23 @@ namespace nts
 
     if (type == "input")
       {
-	m_input[name] = new Input(Input::INPUT, value);
+	m_input[name] = std::make_shared<Input>(Input::INPUT, value);
       }
     else if (type == "clock")
       {
-	m_input[name] = new Input(Input::CLOCK, value);
+	m_input[name] = std::make_shared<Input>(Input::CLOCK, value);
       }
     else if (type == "output")
       {
 	if (value != "")
 	  throw LexicalOrSyntacticError("An output cannot have a value");
-	m_output[name].first = new Output();
+	m_output[name].first = std::make_shared<Output>();
 	m_output[name].second = false;
       }
     else
       {
-	m_component[name] = m_compFactory.createComponent(type, value);
+	m_component[name] = std::shared_ptr<IComponent>(
+	    m_compFactory.createComponent(type, value));
       }
   }
 
@@ -230,12 +231,12 @@ namespace nts
       }
 
     if (m_input.find(name) != m_input.end())
-      res.first = m_input[name];
+      res.first = m_input[name].get();
     else if (m_component.find(name) != m_component.end())
-      res.first = m_component[name];
+      res.first = m_component[name].get();
     else if (m_output.find(name) != m_output.end())
       {
-	res.first = m_output[name].first;
+	res.first = m_output[name].first.get();
 	m_output[name].second = true;
       }
     else
@@ -687,19 +688,20 @@ namespace nts
     m_str << clear.str();
   }
 
-  std::map<std::string, Input *> const &Parser::getInput() const
+  std::map<std::string, std::shared_ptr<Input>> const &Parser::getInput() const
   {
     return (m_input);
   }
 
-  std::map<std::string, IComponent *> const &Parser::getComponent() const
+  std::map<std::string, std::shared_ptr<IComponent>> const &
+      Parser::getComponent() const
   {
     return (m_component);
   }
 
-  std::map<std::string, Output *> Parser::getOutput() const
+  std::map<std::string, std::shared_ptr<Output>> Parser::getOutput() const
   {
-    std::map<std::string, Output *> res;
+    std::map<std::string, std::shared_ptr<Output>> res;
 
     for (auto &e : m_output)
       {

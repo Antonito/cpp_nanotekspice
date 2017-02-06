@@ -23,7 +23,8 @@ namespace nts
       m_pins[4] = m_gates[1][2];
       m_pins[5] = m_gates[1][1];
 
-      m_pins[6] = new Pin(Pin::DEAD);
+      m_pins_[6] = std::make_unique<Pin>(Pin::DEAD);
+      m_pins[6] = m_pins_[6].get();
 
       m_pins[7] = m_gates[2][1];
       m_pins[8] = m_gates[2][2];
@@ -33,12 +34,8 @@ namespace nts
       m_pins[11] = m_gates[3][2];
       m_pins[12] = m_gates[3][1];
 
-      m_pins[13] = new Pin(Pin::DEAD);
-    }
-    virtual ~QuadGate()
-    {
-      delete m_pins[6];
-      delete m_pins[13];
+      m_pins_[13] = std::make_unique<Pin>(Pin::DEAD);
+      m_pins[13] = m_pins_[13].get();
     }
 
   private:

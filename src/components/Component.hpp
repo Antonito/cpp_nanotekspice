@@ -5,6 +5,7 @@
 #include <iostream>
 #include <array>
 #include <utility>
+#include <memory>
 #include "Simulator.hpp"
 #include "IComponent.hpp"
 #include "Pin.hpp"
@@ -81,6 +82,8 @@ namespace nts
     std::array<Pin *, pinsNumber> m_pins;
     std::string m_type;
     size_t      m_simId;
+
+    std::array<std::unique_ptr<Pin>, pinsNumber> m_pins_;
   };
 }
 

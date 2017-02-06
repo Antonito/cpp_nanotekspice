@@ -11,7 +11,7 @@ namespace nts
   {
   public:
     NOTGate(std::string const &type);
-    virtual ~NOTGate();
+    virtual ~NOTGate(){};
     virtual void doOperation();
   };
 }

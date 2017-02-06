@@ -10,14 +10,14 @@ namespace nts
   {
   public:
     Counter(std::string const &type);
-    virtual ~Counter();
+    virtual ~Counter(){};
 
     virtual void doOperation();
 
   private:
-    uint32_t m_val;
-    Pin *    m_output[12];
-    Tristate m_lastClk;
+    uint32_t             m_val;
+    std::unique_ptr<Pin> m_output[12];
+    Tristate             m_lastClk;
   };
 }
 

@@ -12,7 +12,7 @@ namespace nts
   {
   public:
     FlipFlop(std::string const &type = "Flip-Flop");
-    virtual ~FlipFlop();
+    virtual ~FlipFlop(){};
 
     virtual void doOperation();
   };

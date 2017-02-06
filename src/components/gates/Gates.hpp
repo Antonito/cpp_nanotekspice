@@ -7,6 +7,5 @@
 #include "NORGate.hpp"
 #include "XORGate.hpp"
 #include "NOTGate.hpp"
-#include "NodeGate.hpp"
 
 #endif // !GATES_HPP_

@@ -18,7 +18,7 @@ namespace nts
 
     Input(InputType type, std::string const &value);
     Input(Input const &other) = delete;
-    virtual ~Input();
+    virtual ~Input(){};
 
     Input &operator=(Input const &other) = delete;
 

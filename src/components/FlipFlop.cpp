@@ -4,22 +4,19 @@ namespace nts
 {
   FlipFlop::FlipFlop(std::string const &type) : Component(type)
   {
-    m_pins[0] = new Pin(Pin::INPUT);        // Set
-    m_pins[1] = new Pin(Pin::INPUT);        // Data
-    m_pins[2] = new Pin(Pin::INPUT);        // Reset
-    m_pins[3] = new Pin(Pin::INPUT);        // Clock
-    m_pins[4] = new Pin(Pin::OUTPUT, this); // -Q
-    m_pins[5] = new Pin(Pin::OUTPUT, this); // Q
-  }
+    m_pins_[0] = std::make_unique<Pin>(Pin::INPUT);
+    m_pins_[1] = std::make_unique<Pin>(Pin::INPUT);
+    m_pins_[2] = std::make_unique<Pin>(Pin::INPUT);
+    m_pins_[3] = std::make_unique<Pin>(Pin::INPUT);
+    m_pins_[4] = std::make_unique<Pin>(Pin::OUTPUT, this);
+    m_pins_[5] = std::make_unique<Pin>(Pin::OUTPUT, this);
 
-  FlipFlop::~FlipFlop()
-  {
-    delete m_pins[0];
-    delete m_pins[1];
-    delete m_pins[2];
-    delete m_pins[3];
-    delete m_pins[4];
-    delete m_pins[5];
+    m_pins[0] = m_pins_[0].get(); // Set
+    m_pins[1] = m_pins_[1].get(); // Data
+    m_pins[2] = m_pins_[2].get(); // Reset
+    m_pins[3] = m_pins_[3].get(); // Clock
+    m_pins[4] = m_pins_[4].get(); // -Q
+    m_pins[5] = m_pins_[5].get(); // Q
   }
 
   void FlipFlop::doOperation()

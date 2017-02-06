@@ -11,7 +11,7 @@ namespace nts
   {
   public:
     DualFlipFlop(std::string const &type);
-    virtual ~DualFlipFlop();
+    virtual ~DualFlipFlop(){};
 
   private:
     FlipFlop m_latch[2];

@@ -4,6 +4,7 @@
 #include <string>
 #include <sstream>
 #include <map>
+#include <memory>
 #include "cpp_nanoTekSpice_parser.hpp"
 #include "ComponentFactory.hpp"
 #include "Input.hpp"
@@ -24,9 +25,10 @@ namespace nts
     virtual void parseTree(t_ast_node &root);
     virtual t_ast_node *createTree();
 
-    std::map<std::string, Input *> const &     getInput() const;
-    std::map<std::string, IComponent *> const &getComponent() const;
-    std::map<std::string, Output *>            getOutput() const;
+    std::map<std::string, std::shared_ptr<Input>> const &getInput() const;
+    std::map<std::string, std::shared_ptr<IComponent>> const &
+        getComponent() const;
+    std::map<std::string, std::shared_ptr<Output>> getOutput() const;
 
   private:
     void parseChipsets(t_ast_node &section);
@@ -47,9 +49,9 @@ namespace nts
 
     std::stringstream m_str;
     ComponentFactory  m_compFactory;
-    std::map<std::string, nts::Input *>      m_input;
-    std::map<std::string, nts::IComponent *> m_component;
-    std::map<std::string, std::pair<Output *, bool>> m_output;
+    std::map<std::string, std::shared_ptr<nts::Input>>      m_input;
+    std::map<std::string, std::shared_ptr<nts::IComponent>> m_component;
+    std::map<std::string, std::pair<std::shared_ptr<Output>, bool>> m_output;
   };
 }
 

@@ -8,14 +8,10 @@ namespace nts
   {
     if (value != "")
       throw BadParameter("An input doesn't need a value parameter");
-    m_pins[0] = new Pin(Pin::OUTPUT, this);
+    m_pins_[0] = std::make_unique<Pin>(Pin::OUTPUT, this);
+    m_pins[0] = m_pins_[0].get();
     m_value = nts::UNDEFINED;
     // m_pins[0]->compute();
-  }
-
-  Input::~Input()
-  {
-    delete m_pins[0];
   }
 
   void Input::changeValue(Tristate val)

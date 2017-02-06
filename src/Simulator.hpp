@@ -4,6 +4,7 @@
 #include <vector>
 #include <map>
 #include <string>
+#include <memory>
 #include "IComponent.hpp"
 
 namespace nts
@@ -29,9 +30,9 @@ namespace nts
     void setInput(std::string const &command, bool set = false);
     void display() const;
 
-    std::map<std::string, Input *>      m_input;
-    std::map<std::string, IComponent *> m_component;
-    std::map<std::string, Output *>     m_output;
+    std::map<std::string, std::shared_ptr<Input>>      m_input;
+    std::map<std::string, std::shared_ptr<IComponent>> m_component;
+    std::map<std::string, std::shared_ptr<Output>>     m_output;
     static bool   m_looping;
     static size_t m_simId;
   };

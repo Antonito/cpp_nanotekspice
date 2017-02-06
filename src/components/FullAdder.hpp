@@ -8,17 +8,13 @@
 
 namespace nts
 {
-  class FullAdder : public Component<5>
+  class FullAdder : public Component<5>, public IOperable
   {
   public:
     FullAdder(std::string const &type = "Full Adder");
-    virtual ~FullAdder();
+    virtual ~FullAdder(){};
 
-  private:
-    NodeGate m_node[3];
-    ANDGate  m_and[2];
-    ORGate   m_or;
-    XORGate  m_xor[2];
+    virtual void doOperation();
   };
 }
 

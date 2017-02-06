@@ -11,7 +11,7 @@ namespace nts
   {
   public:
     Adder(std::string const &type);
-    virtual ~Adder();
+    virtual ~Adder(){};
 
   private:
     FullAdder m_adder[4];

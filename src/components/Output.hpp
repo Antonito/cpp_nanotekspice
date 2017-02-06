@@ -11,7 +11,7 @@ namespace nts
   public:
     Output();
     Output(Output const &other) = delete;
-    ~Output();
+    virtual ~Output(){};
 
     Output &operator=(Output const &other) = delete;
     Tristate getValue();
