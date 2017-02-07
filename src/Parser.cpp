@@ -31,6 +31,19 @@ namespace nts
     return (*this);
   }
 
+  void Parser::deleteTree(t_ast_node *root) const
+  {
+    if (root->children != nullptr)
+      {
+	for (t_ast_node *child : *root->children)
+	  {
+	    this->deleteTree(child);
+	  }
+	delete root->children;
+      }
+    delete root;
+  }
+
   void Parser::feed(std::string const &input)
   {
     m_str << input;

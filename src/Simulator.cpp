@@ -40,6 +40,8 @@ namespace nts
 	m_input = parser.getInput();
 	m_component = parser.getComponent();
 	m_output = parser.getOutput();
+	parser.deleteTree(root);
+	root = nullptr;
 
 	for (size_t i = 0; i < n; ++i)
 	  this->setInput(std::string(param[i]), true);
