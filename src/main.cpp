@@ -1,13 +1,16 @@
 #include <iostream>
 #include "Simulator.hpp"
 
-#define TRYIT_
+#define TRYIT
 
 int main(int ac, char **av)
 {
 
   if (ac == 1)
-    std::cerr << av[0] << " CONFIG_FILE [INPUT=(0|1)] ..." << std::endl;
+    {
+      std::cerr << av[0] << " CONFIG_FILE [INPUT=(0|1)] ..." << std::endl;
+      return (1);
+    }
 
 #ifdef TRYIT
   try
