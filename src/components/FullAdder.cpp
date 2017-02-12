@@ -4,17 +4,11 @@ namespace nts
 {
   FullAdder::FullAdder(std::string const &type) : Component(type)
   {
-    m_pins_[0] = std::make_unique<Pin>(Pin::INPUT);
-    m_pins_[1] = std::make_unique<Pin>(Pin::INPUT);
-    m_pins_[2] = std::make_unique<Pin>(Pin::INPUT);
-    m_pins_[3] = std::make_unique<Pin>(Pin::OUTPUT, this);
-    m_pins_[4] = std::make_unique<Pin>(Pin::OUTPUT, this);
-
-    m_pins[0] = m_pins_[0].get();
-    m_pins[1] = m_pins_[1].get();
-    m_pins[2] = m_pins_[2].get();
-    m_pins[3] = m_pins_[3].get();
-    m_pins[4] = m_pins_[4].get();
+    m_pins[0]->setMode(Pin::INPUT);
+    m_pins[1]->setMode(Pin::INPUT);
+    m_pins[2]->setMode(Pin::INPUT);
+    m_pins[3]->setMode(Pin::INPUT);
+    m_pins[4]->setMode(Pin::OUTPUT);
   }
 
   void FullAdder::doOperation()

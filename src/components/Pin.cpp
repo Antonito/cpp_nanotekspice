@@ -10,8 +10,6 @@ namespace nts
       : m_link(std::make_pair<IComponent *, size_t>(nullptr, 0)), m_mode(mode),
         m_gate(gate), m_lastValue(nts::UNDEFINED), m_computing(false)
   {
-    // Output with no associated gate
-    assert(mode <= INPUT || gate != nullptr);
   }
 
   Pin::~Pin()
@@ -21,6 +19,13 @@ namespace nts
   Pin::Mode Pin::getMode() const
   {
     return (m_mode);
+  }
+
+  Pin *Pin::setMode(Mode mode, IOperable *gate)
+  {
+    m_mode = mode;
+    m_gate = gate;
+    return (this);
   }
 
   nts::Tristate Pin::getValue()

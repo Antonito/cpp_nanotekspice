@@ -15,8 +15,8 @@ namespace nts
     virtual void doOperation();
 
   private:
-    std::unique_ptr<Pin> m_output[8];
-    Tristate             m_lastClk;
+    Pin *    m_output[8];
+    Tristate m_lastClk;
   };
 }
 

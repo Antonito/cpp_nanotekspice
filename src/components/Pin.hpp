@@ -27,7 +27,8 @@ namespace nts
 
     Pin &operator=(Pin const &other) = delete;
 
-    Mode          getMode() const;
+    Mode getMode() const;
+    Pin *setMode(Mode mode, IOperable *gate = nullptr);
     nts::Tristate getValue();
     nts::Tristate getLastValue() const;
     void setValue(Tristate value);

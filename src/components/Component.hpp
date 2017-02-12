@@ -77,6 +77,11 @@ namespace nts
   protected:
     Component(std::string const &type) : m_type(type), m_simId(0)
     {
+      for (size_t i = 0; i < pinsNumber; ++i)
+	{
+	  m_pins_[i] = std::make_unique<Pin>(Pin::DEAD);
+	  m_pins[i] = m_pins_[i].get();
+	}
     }
 
     std::array<Pin *, pinsNumber> m_pins;
