@@ -12,10 +12,10 @@ for TEST in ${TEST_LIST[@]}; do
 
 	CMD_FILE="tests/cmd/$TEST.sh"
 	EXPECTED="tests/expected/$TEST.txt"
-	OUTPUT="tests/output/$TEST.txt"
+	OUTPUT="tests/output_tmp/$TEST.txt"
 
-	./$CMD_FILE > $OUTPUT || { echo -e "${RED}KO${NC}"; continue; }
-	DIFF=$(diff $EXPECTED $OUTPUT) || { echo -e "${RED}KO${NC}"; continue; }
+	./$CMD_FILE > $OUTPUT || { echo -e "${RED}KO${NC}"; rm $OUTPUT; continue; }
+	DIFF=$(diff $EXPECTED $OUTPUT) || { echo -e "${RED}KO${NC}"; rm $OUTPUT; continue; }
 	if [ -z "$DIFF" ]
 	then
 		echo -e "${GREEN}OK${NC}"
@@ -28,4 +28,5 @@ for TEST in ${TEST_LIST[@]}; do
 		echo -e "\n=====     Diff     ====="
 		echo "$DIFF"
 	fi
+	rm $OUTPUT
 done
