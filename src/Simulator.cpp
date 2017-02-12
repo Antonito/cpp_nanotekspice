@@ -51,6 +51,8 @@ namespace nts
 	    throw InvalidInput("Missing input value on command line");
 
 	signal(SIGINT, &Simulator::loopingSignal);
+	this->simulate();
+	this->display();
       }
     else
       {
@@ -126,17 +128,17 @@ namespace nts
   {
     for (auto &i : m_output)
       {
-	std::cout << i.first << " = ";
+	std::cout << i.first << "=";
 	switch (i.second->getLastValue())
 	  {
 	  case nts::TRUE:
-	    std::cout << "TRUE";
+	    std::cout << "1";
 	    break;
 	  case nts::FALSE:
-	    std::cout << "FALSE";
+	    std::cout << "0";
 	    break;
 	  default:
-	    std::cout << "UNDEFINED";
+	    std::cout << "X";
 	    break;
 	  }
 	std::cout << std::endl;
