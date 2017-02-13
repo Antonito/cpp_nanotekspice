@@ -8,7 +8,8 @@ namespace nts
 {
   Pin::Pin(Mode mode, IOperable *gate)
       : m_link(std::make_pair<IComponent *, size_t>(nullptr, 0)), m_mode(mode),
-        m_gate(gate), m_lastValue(nts::UNDEFINED), m_computing(false)
+        m_gate(gate), m_lastValue(nts::UNDEFINED), m_computing(false),
+        m_simId(0)
   {
   }
 
@@ -55,11 +56,16 @@ namespace nts
 	std::cout << "PIN: " << static_cast<int>(m_mode) << std::endl;
 	throw InvalidPin("Trying to compute an input or dead pin");
       }
+    if (m_simId == Simulator::simId())
+      {
+	return (m_lastValue);
+      }
     if (m_gate != nullptr && m_computing == false)
       {
 	m_computing = true;
 	m_gate->doOperation();
 	m_computing = false;
+	m_simId = Simulator::simId();
       }
     return (m_lastValue);
   }

@@ -46,9 +46,13 @@ namespace nts
 	for (size_t i = 0; i < n; ++i)
 	  this->setInput(std::string(param[i]), true);
 
+	Simulator::m_simId++;
 	for (auto &i : m_input)
 	  if (i.second->Compute() == nts::UNDEFINED)
-	    throw InvalidInput("Missing input value on command line");
+	    {
+	      std::cout << i.first << std::endl;
+	      throw InvalidInput("Missing input value on command line");
+	    }
 
 	signal(SIGINT, &Simulator::loopingSignal);
 	this->simulate();

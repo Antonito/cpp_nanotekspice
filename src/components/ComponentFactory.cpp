@@ -13,6 +13,7 @@
 #include "DualFlipFlop.hpp"
 #include "Johnson.hpp"
 #include "Counter.hpp"
+#include "SixNot.hpp"
 
 namespace nts
 {
@@ -59,6 +60,7 @@ namespace nts
 	if (types[i] == type)
 	  return ((this->*tab[i])(value));
       }
+    throw BadParameter(type + " chipset is unknown");
     return (nullptr);
   }
 
@@ -139,7 +141,7 @@ namespace nts
       {
 	throw BadParameter("4069 chipset doesn't need input value");
       }
-    return (nullptr); // TODO: create 4069 type
+    return (new SixNot("4069"));
   }
 
   // 4071 Four OR gates

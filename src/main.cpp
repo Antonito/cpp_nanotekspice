@@ -1,7 +1,7 @@
 #include <iostream>
 #include "Simulator.hpp"
 
-#define TRYIT
+#define TRYIT_
 
 int main(int ac, char **av)
 {

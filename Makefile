@@ -25,7 +25,8 @@ COMPONENT_FILES= Pin.cpp		\
 		DualFlipFlop.cpp	\
 		Johnson.cpp		\
 		Counter.cpp		\
-		ShiftRegister.cpp
+		ShiftRegister.cpp	\
+		SixNot.cpp
 
 GATES_FILES=	AGate.cpp		\
 		ANDGate.cpp		\

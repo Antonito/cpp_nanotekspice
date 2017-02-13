@@ -41,13 +41,7 @@ namespace nts
 	{
 	  throw InvalidPin("Trying to compute an invalid pin");
 	}
-      if (m_simId != Simulator::simId())
-	{
-	  s = m_pins[pin_num_this - 1]->compute();
-	  m_simId = Simulator::simId();
-	}
-      else
-	s = m_pins[pin_num_this - 1]->getLastValue();
+      s = m_pins[pin_num_this - 1]->compute();
       return (s);
     }
 
@@ -86,7 +80,6 @@ namespace nts
 
     std::array<Pin *, pinsNumber> m_pins;
     std::string m_type;
-    size_t      m_simId;
 
     std::array<std::unique_ptr<Pin>, pinsNumber> m_pins_;
   };

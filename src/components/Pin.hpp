@@ -41,6 +41,7 @@ namespace nts
     IOperable *   m_gate;
     nts::Tristate m_lastValue;
     bool          m_computing;
+    size_t        m_simId;
   };
 }
 

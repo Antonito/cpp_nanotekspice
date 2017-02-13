@@ -2,15 +2,16 @@
 
 namespace nts
 {
-  NOTGate::NOTGate(std::string const &type) : Component(type)
-  {
-    m_pins_[0] = std::make_unique<Pin>(Pin::INPUT);
-    m_pins_[1] = std::make_unique<Pin>(Pin::OUTPUT, this);
 
-    m_pins[0] = m_pins_[0].get();
-    m_pins[1] = m_pins_[1].get();
+  NOTGate::NOTGate() : NOTGate("NOT")
+  {
   }
 
+  NOTGate::NOTGate(std::string const &type) : Component(type)
+  {
+    m_pins[0]->setMode(Pin::INPUT);
+    m_pins[1]->setMode(Pin::OUTPUT, this);
+  }
   void NOTGate::doOperation()
   {
     Tristate a = m_pins[0]->getValue();
