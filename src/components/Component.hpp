@@ -69,7 +69,7 @@ namespace nts
     }
 
   protected:
-    Component(std::string const &type) : m_type(type), m_simId(0)
+    Component(std::string const &type) : m_type(type)
     {
       for (size_t i = 0; i < pinsNumber; ++i)
 	{

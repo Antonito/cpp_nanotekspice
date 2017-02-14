@@ -121,7 +121,7 @@ namespace nts
       {
 	throw BadParameter("4030 chipset doesn't need input value");
       }
-    return (new QuadGate<NORGate>("4030"));
+    return (new QuadGate<XORGate>("4030"));
   }
 
   // 4040 12bits counter
