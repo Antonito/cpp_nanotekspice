@@ -2,7 +2,7 @@ A=0
 B=0
 
 function filename {
-	echo "01_basics/and.nts"
+	echo "01_basics/or.nts"
 }
 
 function startInput {
@@ -20,7 +20,7 @@ function changeInput {
 }
 
 function currentOutput {
-	if [[ $A -eq 1 && $B -eq 1 ]]; then
+	if [[ $A -eq 1 || $B -eq 1 ]]; then
 		TMP="s=1"
 	else
 		TMP="s=0"
