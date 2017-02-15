@@ -1,7 +1,7 @@
 #include <iostream>
 #include "Simulator.hpp"
 
-#define TRYIT_
+#define TRYIT
 
 int main(int ac, char **av)
 {
@@ -22,15 +22,22 @@ int main(int ac, char **av)
       std::cout << "> " << std::flush;
       while (getline(std::cin, command))
 	{
-	  if (simulator.command(command) == false)
-	    break;
+	  try
+	    {
+	      if (simulator.command(command) == false)
+		break;
+	    }
+	  catch (std::exception &e)
+	    {
+	      std::cerr << e.what() << std::endl;
+	    }
 	  std::cout << "> " << std::flush;
 	}
 #ifdef TRYIT
     }
   catch (std::exception &e)
     {
-      std::cerr << "Error: " << e.what() << std::endl;
+      std::cerr << "Fatal error: " << e.what() << std::endl;
       return (1);
     }
 #endif

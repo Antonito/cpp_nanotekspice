@@ -15,10 +15,10 @@ namespace nts
     virtual void doOperation();
 
   private:
-    size_t   m_count;
-    FlipFlop m_latch[4];
-    Pin *    m_output[16];
-    Tristate m_lastClk;
+    Pin *m_input[4];
+    Pin *m_output[16];
+    Pin *m_strobe;
+    Pin *m_inhibit;
   };
 }
 

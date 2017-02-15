@@ -72,8 +72,6 @@ namespace nts
 
   void Pin::setLink(IComponent &component, size_t pin)
   {
-    if (m_mode != INPUT && m_mode != HYBRID)
-      throw InvalidPin("Cannot set a link from an output or dead");
     m_link.first = &component;
     m_link.second = pin;
   }

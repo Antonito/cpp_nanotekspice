@@ -211,14 +211,8 @@ namespace nts
     if (n != 2)
       throw LexicalOrSyntacticError("Lexical or syntaxic error");
 
-    try
-      {
-	end[0].first->SetLink(end[0].second, *end[1].first, end[1].second);
-      }
-    catch (std::exception &)
-      {
-	end[1].first->SetLink(end[1].second, *end[0].first, end[0].second);
-      }
+    end[0].first->SetLink(end[0].second, *end[1].first, end[1].second);
+    end[1].first->SetLink(end[1].second, *end[0].first, end[0].second);
   }
 
   std::pair<IComponent *, size_t> Parser::parseLinkEnd(t_ast_node &link)
