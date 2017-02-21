@@ -1,5 +1,5 @@
 # Definitions for Makefile
-NAME=			nts
+NAME=			nanotekspice
 
 DEBUG=			no
 
