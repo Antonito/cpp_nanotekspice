@@ -1,6 +1,7 @@
 #include <stdexcept>
 #include <string>
 #include "ANDGate.hpp"
+#include "ConstInput.hpp"
 #include "ORGate.hpp"
 #include "NANDGate.hpp"
 #include "NORGate.hpp"
@@ -14,6 +15,9 @@
 #include "Johnson.hpp"
 #include "Counter.hpp"
 #include "SixNot.hpp"
+#include "ShiftRegister.hpp"
+#include "Decoder.hpp"
+#include "RAM.hpp"
 
 namespace nts
 {
@@ -45,10 +49,11 @@ namespace nts
         &ComponentFactory::create4040, &ComponentFactory::create4069,
         &ComponentFactory::create4071, &ComponentFactory::create4081,
         &ComponentFactory::create4094, &ComponentFactory::create4514,
-        &ComponentFactory::create4801, &ComponentFactory::create2716};
-    std::string types[] = {"4001", "4008", "4011", "4013", "4017",
-                           "4030", "4040", "4069", "4071", "4081",
-                           "4094", "4514", "4801", "2716"};
+        &ComponentFactory::create4801, &ComponentFactory::create2716,
+        &ComponentFactory::createTrue, &ComponentFactory::createFalse};
+    std::string types[] = {"4001", "4008", "4011", "4013", "4017", "4030",
+                           "4040", "4069", "4071", "4081", "4094", "4514",
+                           "4801", "2716", "true", "false"};
 
     // Check if there are same count of elements in tab and types
     static_assert(sizeof(tab) / sizeof(tab[0]) ==
@@ -171,8 +176,7 @@ namespace nts
       {
 	throw BadParameter("4094 chipset doesn't need input value");
       }
-    throw std::exception();
-    return (nullptr); // TODO: implement
+    return (new ShiftRegister("4094"));
   }
 
   // 4514 4bits decoder
@@ -182,8 +186,7 @@ namespace nts
       {
 	throw BadParameter("4514 chipset doesn't need input value");
       }
-    throw std::exception();
-    return (nullptr); // TODO: implement
+    return (new Decoder("4514"));
   }
 
   // 4801 RAM
@@ -193,8 +196,7 @@ namespace nts
       {
 	throw BadParameter("4801 chipset doesn't need input value");
       }
-    throw std::exception();
-    return (nullptr); // TODO: implement
+    return (new RAM("4801"));
   }
 
   // 2716 ROM
@@ -206,5 +208,25 @@ namespace nts
       }
     throw std::exception();
     return (nullptr); // TODO: implement
+  }
+
+  // True
+  IComponent *ComponentFactory::createTrue(std::string const &value) const
+  {
+    if (value != "")
+      {
+	throw BadParameter("True chipset doesn't need input value");
+      }
+    return (new ConstInput("true", nts::TRUE));
+  }
+
+  // False
+  IComponent *ComponentFactory::createFalse(std::string const &value) const
+  {
+    if (value != "")
+      {
+	throw BadParameter("False chipset doesn't need input value");
+      }
+    return (new ConstInput("false", nts::FALSE));
   }
 }

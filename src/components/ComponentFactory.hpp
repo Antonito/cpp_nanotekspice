@@ -32,6 +32,8 @@ namespace nts
     IComponent *create4514(std::string const &value) const;
     IComponent *create4801(std::string const &value) const;
     IComponent *create2716(std::string const &value) const;
+    IComponent *createTrue(std::string const &value) const;
+    IComponent *createFalse(std::string const &value) const;
   };
 }
 

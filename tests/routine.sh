@@ -33,4 +33,4 @@ EXPECTED="$EXPECTED
 
 echo -n "$EXPECTED" > $ARG_EXPECTED
 
-echo "$COMMAND" | ./nts $(filename) $(startInput)
+echo "$COMMAND" | ./nanotekspice $(filename) $(startInput)

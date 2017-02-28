@@ -2,8 +2,9 @@
 
 namespace nts
 {
-  Decoder::Decoder(std::string const &type) : Component(type), m_count(0)
+  Decoder::Decoder(std::string const &type) : Component(type)
   {
+#if 0
     int out[] = {11, 9, 10, 8, 7, 6, 5, 4, 18, 17, 20, 19, 14, 13, 16, 15};
     int in[] = {2, 3, 21, 22};
 
@@ -24,10 +25,12 @@ namespace nts
 
     m_strobe->setMode(Pin::INPUT);
     m_inhibit->setMode(Pin::INPUT);
+#endif
   }
 
   void Decoder::doOperation()
   {
+#if 0
     Tristate strobe = m_strobe->getValue();
     Tristate inhibit = m_inhibit->getValue();
 
@@ -64,5 +67,6 @@ namespace nts
 	      }
 	  }
       }
+#endif
   }
 }
