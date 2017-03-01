@@ -18,6 +18,7 @@
 #include "ShiftRegister.hpp"
 #include "Decoder.hpp"
 #include "RAM.hpp"
+#include "ROM.hpp"
 
 namespace nts
 {
@@ -206,8 +207,7 @@ namespace nts
       {
 	throw BadParameter("2716 chipset need input value");
       }
-    throw std::exception();
-    return (nullptr); // TODO: implement
+    return (new ROM("2716", value));
   }
 
   // True

@@ -19,6 +19,7 @@ COMPONENT_FILES= Pin.cpp		\
 		ComponentFactory.cpp	\
 		ConstInput.cpp		\
 		RAM.cpp			\
+		ROM.cpp			\
 		Decoder.cpp		\
 		Input.cpp		\
 		Output.cpp		\
