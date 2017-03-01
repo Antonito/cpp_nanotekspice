@@ -7,8 +7,8 @@ namespace nts
     m_pins[0]->setMode(Pin::INPUT);
     m_pins[1]->setMode(Pin::INPUT);
     m_pins[2]->setMode(Pin::INPUT);
-    m_pins[3]->setMode(Pin::INPUT);
-    m_pins[4]->setMode(Pin::OUTPUT);
+    m_pins[3]->setMode(Pin::OUTPUT, this);
+    m_pins[4]->setMode(Pin::OUTPUT, this);
   }
 
   void FullAdder::doOperation()
