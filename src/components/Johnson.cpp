@@ -4,7 +4,7 @@ namespace nts
 {
   Johnson::Johnson(std::string const &type) : Component(type), m_count(0)
   {
-    int index[] = {2, 1, 3, 9, 0, 4, 5, 8, 10};
+    int index[] = {2, 1, 3, 6, 9, 0, 4, 5, 8, 10};
 
     for (size_t i = 0; i < 10; ++i)
       {
@@ -29,8 +29,12 @@ namespace nts
     if (mr == nts::TRUE)
       {
 	m_count = 0;
+	for (size_t i = 0; i < 10; ++i)
+	  {
+	    m_output[i]->setValue(nts::FALSE);
+	  }
       }
-    if (m_lastClk != nts::TRUE && clk == nts::TRUE)
+    else if (m_lastClk != nts::TRUE && clk == nts::TRUE)
       {
 	for (size_t i = 0; i < 10; ++i)
 	  {
