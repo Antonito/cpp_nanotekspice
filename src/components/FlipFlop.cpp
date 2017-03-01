@@ -4,12 +4,12 @@ namespace nts
 {
   FlipFlop::FlipFlop(std::string const &type) : Component(type)
   {
-    m_pins[0]->setMode(Pin::INPUT);  // Set
-    m_pins[1]->setMode(Pin::INPUT);  // Data
-    m_pins[2]->setMode(Pin::INPUT);  // Reset
-    m_pins[3]->setMode(Pin::INPUT);  // Clock
-    m_pins[4]->setMode(Pin::OUTPUT); // -Q
-    m_pins[5]->setMode(Pin::OUTPUT); // Q
+    m_pins[0]->setMode(Pin::INPUT);        // Set
+    m_pins[1]->setMode(Pin::INPUT);        // Data
+    m_pins[2]->setMode(Pin::INPUT);        // Reset
+    m_pins[3]->setMode(Pin::INPUT);        // Clock
+    m_pins[4]->setMode(Pin::OUTPUT, this); // -Q
+    m_pins[5]->setMode(Pin::OUTPUT, this); // Q
   }
 
   void FlipFlop::doOperation()
