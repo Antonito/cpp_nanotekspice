@@ -1,0 +1,53 @@
+.chipsets:
+input		a
+input		b
+input		c
+
+input		d
+input		e
+input		f
+input		g
+input		h
+input		i
+input		j
+
+input		ce
+input		oe
+input		we
+
+output		s
+output		sa
+output		sb
+output		sc
+output		sd
+output		se
+output		sf
+output		sg
+
+4801		ram
+
+.links:
+a:1		ram:7
+b:1		ram:3
+c:1		ram:23
+
+d:1		ram:8
+e:1		ram:6
+f:1		ram:5
+g:1		ram:4
+h:1		ram:2
+i:1		ram:1
+j:1		ram:22
+
+ce:1		ram:18
+oe:1		ram:20
+we:1		ram:21
+
+s:1		ram:9
+sa:1		ram:10
+sb:1		ram:11
+sc:1		ram:13
+sd:1		ram:14
+se:1		ram:15
+sf:1		ram:16
+sg:1		ram:17

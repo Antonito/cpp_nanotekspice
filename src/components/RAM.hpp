@@ -15,7 +15,7 @@ namespace nts
     virtual void doOperation();
 
   private:
-    Pin *m_addrInput[11];
+    Pin *m_addrInput[10];
     Pin *m_dataIO[8];
     Pin *m_writeEnable;
     Pin *m_outputEnable;

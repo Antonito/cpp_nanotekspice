@@ -1,16 +1,14 @@
 #include <cassert>
 #include "RAM.hpp"
 
-#pragma message("Need to test RAM !")
-
 namespace nts
 {
   RAM::RAM(std::string const &type) : Component(type), m_buff()
   {
-    int addrIn[] = {7, 8, 6, 5, 4, 3, 2, 1, 0, 22, 21};
+    int addrIn[] = {7, 6, 5, 4, 3, 2, 1, 0, 22, 21};
     int dataIO[] = {8, 9, 10, 12, 13, 14, 15, 16};
 
-    for (size_t i = 0; i < 11; ++i)
+    for (size_t i = 0; i < 10; ++i)
       {
 	m_addrInput[i] = m_pins[addrIn[i]];
 	m_addrInput[i]->setMode(Pin::INPUT);
@@ -18,12 +16,17 @@ namespace nts
     for (size_t i = 0; i < 8; ++i)
       {
 	m_dataIO[i] = m_pins[dataIO[i]];
-	m_dataIO[i]->setMode(Pin::HYBRID);
+	m_dataIO[i]->setMode(Pin::HYBRID, this);
+	m_dataIO[i]->setValue(Tristate::FALSE);
       }
     m_writeEnable = m_pins[20];
     m_outputEnable = m_pins[19];
     m_noConnect = m_pins[18];
     m_chipEnable = m_pins[17];
+    m_chipEnable->setMode(Pin::INPUT);
+    m_noConnect->setMode(Pin::INPUT);
+    m_outputEnable->setMode(Pin::INPUT);
+    m_writeEnable->setMode(Pin::INPUT);
   }
 
   void RAM::doOperation()
@@ -41,7 +44,7 @@ namespace nts
          (m_addrInput[7]->getValue() << 5) | (m_addrInput[9]->getValue() << 6);
     assert(y * 128 + x < 1024); // Cannot be more than what the buffer allows
     requ_byte = m_buff[(y * 128 + x)];
-    if (m_chipEnable->getValue())
+    if (!m_chipEnable->getValue())
       {
 	// Mode DESELECT
 	for (size_t i = 0; i < 8; ++i)
@@ -61,7 +64,7 @@ namespace nts
 	      }
 	    m_buff[(y * 128 + x)] = requ_byte;
 	  }
-	else if (m_outputEnable->getValue())
+	else if (!m_outputEnable->getValue())
 	  {
 	    // High Z
 	    for (size_t i = 0; i < 8; ++i)
@@ -74,7 +77,7 @@ namespace nts
 	    // Mode Read
 	    for (size_t i = 0; i < 8; ++i)
 	      {
-		m_dataIO[i]->setValue((requ_byte & (1 << i)) == 1
+		m_dataIO[i]->setValue(((requ_byte & (1 << i)) != 0)
 		                          ? nts::Tristate::TRUE
 		                          : nts::Tristate::FALSE);
 	      }

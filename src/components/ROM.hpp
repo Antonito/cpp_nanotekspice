@@ -13,6 +13,13 @@ namespace nts
     virtual ~ROM(){};
 
     virtual void doOperation();
+
+  private:
+    Pin *m_addrInput[11];
+    Pin *m_data[8];
+    Pin *m_outEnable;
+    Pin *m_chipEnable;
+    char m_file[16384];
   };
 }
 
