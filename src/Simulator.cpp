@@ -8,7 +8,7 @@
 #include "InvalidInput.hpp"
 #include "UnknownComponent.hpp"
 #include "Parser.hpp"
-
+#pragma message("REMOVE THOSE AUTOs")
 namespace nts
 {
   bool   Simulator::m_looping = false;
