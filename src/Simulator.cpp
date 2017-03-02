@@ -142,7 +142,7 @@ namespace nts
 	    std::cout << "0";
 	    break;
 	  default:
-	    std::cout << "X";
+	    std::cout << "U";
 	    break;
 	  }
 	std::cout << std::endl;
