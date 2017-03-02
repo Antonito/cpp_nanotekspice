@@ -16,7 +16,7 @@ namespace nts
     m_pins[9]->setMode(Pin::INPUT);  // CLOCK
     m_pins[10]->setMode(Pin::INPUT); // MASTER RESET
 
-    m_lastClk = nts::TRUE;
+    m_lastClk = nts::UNDEFINED;
   }
 
   void Counter::doOperation()

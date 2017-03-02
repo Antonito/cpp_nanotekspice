@@ -10,7 +10,7 @@ namespace nts
     m_pins[3]->setMode(Pin::INPUT);        // Clock
     m_pins[4]->setMode(Pin::OUTPUT, this); // -Q
     m_pins[5]->setMode(Pin::OUTPUT, this); // Q
-    m_lastClk = nts::FALSE;
+    m_lastClk = nts::UNDEFINED;
   }
 
   void FlipFlop::doOperation()
