@@ -16,7 +16,7 @@ namespace nts
     m_pins[9]->setMode(Pin::INPUT);  // CLOCK
     m_pins[10]->setMode(Pin::INPUT); // MASTER RESET
 
-    m_lastClk = nts::UNDEFINED;
+    m_lastClk = nts::TRUE;
   }
 
   void Counter::doOperation()
@@ -32,7 +32,7 @@ namespace nts
 	    m_output[i]->setValue(nts::FALSE);
 	  }
       }
-    else if (m_lastClk != nts::FALSE && clk == nts::FALSE)
+    else if (m_lastClk == nts::TRUE && clk == nts::FALSE)
       {
 	m_val = (m_val + 1) % (1 << 13);
 	for (size_t i = 0; i < 12; ++i)

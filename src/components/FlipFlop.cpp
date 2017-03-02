@@ -2,8 +2,7 @@
 
 namespace nts
 {
-  FlipFlop::FlipFlop(std::string const &type)
-      : Component(type), m_lastClk(nts::UNDEFINED)
+  FlipFlop::FlipFlop(std::string const &type) : Component(type)
   {
     m_pins[0]->setMode(Pin::INPUT);        // Set
     m_pins[1]->setMode(Pin::INPUT);        // Data
@@ -11,6 +10,7 @@ namespace nts
     m_pins[3]->setMode(Pin::INPUT);        // Clock
     m_pins[4]->setMode(Pin::OUTPUT, this); // -Q
     m_pins[5]->setMode(Pin::OUTPUT, this); // Q
+    m_lastClk = nts::FALSE;
   }
 
   void FlipFlop::doOperation()
@@ -30,7 +30,7 @@ namespace nts
 	m_pins[4]->setValue(reset);
 	m_pins[5]->setValue(set);
       }
-    else if (m_lastClk != nts::TRUE && clock == nts::TRUE)
+    else if (m_lastClk == nts::FALSE && clock == nts::TRUE)
       {
 	m_pins[4]->setValue(data == nts::TRUE ? nts::FALSE : nts::TRUE);
 	m_pins[5]->setValue(data);

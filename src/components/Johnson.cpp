@@ -18,7 +18,7 @@ namespace nts
     m_pins[14]->setMode(Pin::INPUT);        // MASTER RESET
 
     m_output[0]->setValue(nts::TRUE);
-    m_lastClk = nts::UNDEFINED;
+    m_lastClk = nts::FALSE;
   }
 
   void Johnson::doOperation()
@@ -34,7 +34,7 @@ namespace nts
 	    m_output[i]->setValue(nts::FALSE);
 	  }
       }
-    else if (m_lastClk != nts::TRUE && clk == nts::TRUE)
+    else if (m_lastClk == nts::FALSE && clk == nts::TRUE)
       {
 	for (size_t i = 0; i < 10; ++i)
 	  {
