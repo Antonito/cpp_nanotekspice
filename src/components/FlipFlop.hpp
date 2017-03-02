@@ -15,6 +15,9 @@ namespace nts
     virtual ~FlipFlop(){};
 
     virtual void doOperation();
+
+  private:
+    nts::Tristate m_lastClk;
   };
 }
 
