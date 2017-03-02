@@ -4,12 +4,12 @@ namespace nts
 {
   SixNot::SixNot(std::string const &type) : Component(type)
   {
-    // Delete all the unused pins (except 6 and 14)
-    //     for (size_t i = 0; i < 13; ++i)
-    //       {
-    // 	if (i != 6)
-    // 	  m_pins_[i].reset();
-    //       }
+    // Delete all the unused pins(except 6 and 14)
+    for (size_t i = 0; i < 13; ++i)
+      {
+	if (i != 6)
+	  m_pins_[i].reset();
+      }
 
     m_pins[0] = m_gates[1][1];
     m_pins[1] = m_gates[1][2];

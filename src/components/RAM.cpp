@@ -1,4 +1,3 @@
-#include <cassert>
 #include "RAM.hpp"
 
 namespace nts
@@ -42,8 +41,7 @@ namespace nts
          (m_addrInput[4]->getValue() << 3) |
          (m_addrInput[6]->getValue() << 4) |
          (m_addrInput[7]->getValue() << 5) | (m_addrInput[9]->getValue() << 6);
-    assert(y * 128 + x < 1024); // Cannot be more than what the buffer allows
-    requ_byte = m_buff[(y * 128 + x)];
+    requ_byte = m_buff[(y * x)];
     if (!m_chipEnable->getValue())
       {
 	// Mode DESELECT
@@ -62,7 +60,7 @@ namespace nts
 	      {
 		requ_byte |= m_dataIO[i]->getValue() << i;
 	      }
-	    m_buff[(y * 128 + x)] = requ_byte;
+	    m_buff[(y * x)] = requ_byte;
 	  }
 	else if (!m_outputEnable->getValue())
 	  {
