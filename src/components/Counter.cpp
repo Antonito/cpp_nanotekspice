@@ -32,7 +32,7 @@ namespace nts
 	    m_output[i]->setValue(nts::FALSE);
 	  }
       }
-    else if (m_lastClk != nts::TRUE && clk == nts::TRUE)
+    else if (m_lastClk == nts::TRUE && clk == nts::FALSE)
       {
 	m_val = (m_val + 1) % (1 << 13);
 	for (size_t i = 0; i < 12; ++i)
