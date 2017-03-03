@@ -8,7 +8,7 @@ namespace nts
 {
   ROM::ROM(std::string const &type, std::string const &value) : Component(type)
   {
-    std::ifstream file(value, std::ios::binary);
+    std::ifstream file((value != "") ? value : "rom.bin", std::ios::binary);
     int           addrIn[] = {7, 6, 5, 4, 3, 2, 1, 0, 22, 21, 18};
     int           dataOut[] = {8, 9, 10, 12, 13, 14, 15, 16};
     struct stat   statBuf;
