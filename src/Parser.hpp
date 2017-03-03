@@ -26,17 +26,13 @@ namespace nts
     virtual t_ast_node *createTree();
     void deleteTree(t_ast_node *root) const;
 
-    std::map<std::string, std::shared_ptr<Input>> const &getInput() const;
-    std::map<std::string, std::shared_ptr<IComponent>> const &
-        getComponent() const;
-    std::map<std::string, std::shared_ptr<Output>> getOutput() const;
-
   private:
+    void parseSection(t_ast_node &section);
     void parseChipsets(t_ast_node &section);
     void parseLinks(t_ast_node &section);
     void parseComponent(t_ast_node &component);
     void parseLink(t_ast_node &link);
-    std::pair<IComponent *, size_t> parseLinkEnd(t_ast_node &end);
+    void parseLinkEnd(t_ast_node &end);
 
     t_ast_node *createTreeSection(char input_char);
     t_ast_node *createTreeNewline(char input_char);
@@ -48,11 +44,10 @@ namespace nts
     t_ast_node *createTreeChipset();
     void        clearInput();
 
-    std::stringstream m_str;
-    ComponentFactory  m_compFactory;
-    std::map<std::string, std::shared_ptr<nts::Input>>      m_input;
-    std::map<std::string, std::shared_ptr<nts::IComponent>> m_component;
-    std::map<std::string, std::pair<std::shared_ptr<Output>, bool>> m_output;
+    std::stringstream        m_str;
+    std::vector<std::string> m_input;
+    std::vector<std::string> m_component;
+    std::map<std::string, bool> m_output;
   };
 }
 

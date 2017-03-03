@@ -51,209 +51,164 @@ namespace nts
 
   void Parser::parseTree(t_ast_node &root)
   {
-    bool chipset = false;
-    bool link = false;
+    int s = 0;
 
-    for (t_ast_node *child : *root.children)
+    for (t_ast_node *n : *root.children)
       {
-	switch (child->type)
+	if (n->type == nts::SECTION)
 	  {
-	  case ASTNodeType::NEWLINE:
-	    break;
-	  case ASTNodeType::SECTION:
-	    if (child->value == "chipsets")
+	    if (this->parseSection(*n) != s)
 	      {
-		if (chipset)
-		  {
-		    throw LexicalOrSyntacticError(
-		        "Multiple .chipsets section");
-		  }
-		this->parseChipsets(*child);
-		chipset = true;
+		throw LexicalOrSyntacticError("Invalid section order");
 	      }
-	    else if (child->value == "links")
-	      {
-		if (link)
-		  {
-		    throw LexicalOrSyntacticError("Multiple .links section");
-		  }
-		if (!chipset)
-		  {
-		    throw LexicalOrSyntacticError(
-		        ".links section before ./chipsets section");
-		  }
-		this->parseLinks(*child);
-		link = true;
-	      }
-	    break;
-	  default:
-	    throw LexicalOrSyntacticError("Lexical or syntaxic error");
+	    ++s;
+	  }
+	else if (n->type != nts::NEWLINE)
+	  {
+	    throw LexicalOrSyntacticError("Invalid element");
 	  }
       }
-    if (!chipset || !link)
+  }
+
+  void Parser::parseSection(t_ast_node &section)
+  {
+    if (section.value == "chipsets")
       {
-	throw LexicalOrSyntacticError(
-	    "chipset or link section (or both) is missing");
+	this->parseChipsets(section);
+	return 0;
+      }
+    else if (section.value == "links")
+      {
+	this->parseLinks(section);
+	return 1;
+      }
+    else
+      {
+	throw LexicalOrSyntacticError("Invalid section name");
       }
   }
 
   void Parser::parseChipsets(t_ast_node &section)
   {
-    for (t_ast_node *child : *section.children)
+    for (t_ast_node *n : *root.children)
       {
-	switch (child->type)
+	if (n->type == nts::COMPONENT)
 	  {
-	  case ASTNodeType::NEWLINE:
-	    break;
-	  case ASTNodeType::COMPONENT:
-	    this->parseComponent(*child);
-	    break;
-	  default:
-	    throw LexicalOrSyntacticError("Lexical or syntaxic error");
+	    this->parseComponent(*n);
+	  }
+	else if (n->type != nts::NEWLINE)
+	  {
+	    throw LexicalOrSyntacticError(
+	        "Invalid element in chipsets section");
 	  }
       }
   }
 
   void Parser::parseLinks(t_ast_node &section)
   {
-    for (t_ast_node *child : *section.children)
+    for (t_ast_node *n : *root.children)
       {
-	switch (child->type)
+	if (n->type == nts::LINK)
 	  {
-	  case ASTNodeType::NEWLINE:
-	    break;
-	  case ASTNodeType::LINK:
-	    this->parseLink(*child);
-	    break;
-	  default:
-	    throw LexicalOrSyntacticError("Lexical or syntaxic error");
+	    this->parseLink(*n);
+	  }
+	else if (n->type != nts::NEWLINE)
+	  {
+	    throw LexicalOrSyntacticError("Invalid element in links section");
 	  }
       }
   }
 
   void Parser::parseComponent(t_ast_node &component)
   {
-    std::string type = component.value;
-    std::string name;
-    std::string value;
+    int s = 0;
 
-    for (t_ast_node *child : *component.children)
+    for (t_ast_node *n : *root.children)
       {
-	switch (child->type)
+	if (n->type == nts::STRING)
 	  {
-	  case ASTNodeType::NEWLINE:
-	    break;
-	  case ASTNodeType::STRING:
-	    if (name == "")
-	      name = child->value;
-	    else if (value == "")
-	      value = child->value;
-	    else
-	      throw LexicalOrSyntacticError("Lexical or syntaxic error");
-	    break;
-	  default:
-	    throw LexicalOrSyntacticError("Lexical or syntaxic error");
+	    s++;
+	  }
+
+	else
+	  {
+	    throw LexicalOrSyntacticError(
+	        "Invalid element in component definition");
 	  }
       }
-
-    if (m_input.find(name) != m_input.end() ||
-        m_component.find(name) != m_component.end() ||
-        m_output.find(name) != m_output.end())
+    if (s < 1)
       {
-	throw LexicalOrSyntacticError("Several component share the same name");
+	throw LexicalOrSyntacticError(
+	    "Invalid component definition (missing name)");
+      }
+    else if (s > 2)
+      {
+	throw LexicalOrSyntacticError("Invalid component definition");
       }
 
-    if (type == "input")
+    if (std::find(m_component.begin(), m_component.end(), s[0]) ==
+        m_component.end())
       {
-	m_input[name] = std::make_shared<Input>(Input::INPUT, value);
+	throw LexicalOrSyntacticError(
+	    "There are more than one component with name '" + s[0] + "'")
       }
-    else if (type == "clock")
+
+    if (n->value == "output")
       {
-	m_input[name] = std::make_shared<Input>(Input::CLOCK, value);
+	m_output[s[0]] = false;
       }
-    else if (type == "output")
-      {
-	if (value != "")
-	  throw LexicalOrSyntacticError("An output cannot have a value");
-	m_output[name].first = std::make_shared<Output>();
-	m_output[name].second = false;
-      }
-    else
-      {
-	m_component[name] = std::shared_ptr<IComponent>(
-	    m_compFactory.createComponent(type, value));
-      }
+    m_component.push_back[s[0]];
   }
 
   void Parser::parseLink(t_ast_node &link)
   {
-    std::pair<IComponent *, size_t> end[2];
-    int n = 0;
+    int l = 0;
 
-    for (t_ast_node *child : *link.children)
+    for (t_ast_node *n : *link.children)
       {
-	switch (child->type)
+	if (n->type == nts::LINK_END)
 	  {
-	  case ASTNodeType::NEWLINE:
-	    break;
-	  case ASTNodeType::LINK_END:
-	    if (n > 1)
-	      throw LexicalOrSyntacticError("Lexical or syntaxic error");
-
-	    end[n] = this->parseLinkEnd(*child);
-	    n++;
-	    break;
-	  default:
-	    throw LexicalOrSyntacticError("Lexical or syntaxic error");
+	    this->parseLinkEnd(*n);
+	    ++l;
+	  }
+	else
+	  {
+	    throw LexicalOrSyntacticError("Invalid link definition");
 	  }
       }
-
-    if (n != 2)
-      throw LexicalOrSyntacticError("Lexical or syntaxic error");
-
-    end[0].first->SetLink(end[0].second, *end[1].first, end[1].second);
-    end[1].first->SetLink(end[1].second, *end[0].first, end[0].second);
+    if (l != 2)
+      {
+	throw LexicalOrSyntacticError("Invalid link definition");
+      }
   }
 
-  std::pair<IComponent *, size_t> Parser::parseLinkEnd(t_ast_node &link)
+  void Parser::parseLinkEnd(t_ast_node &end)
   {
-    std::pair<IComponent *, size_t> res;
-    std::string val;
-    std::string name = link.value;
+    std::string pin;
+    int         p = 0;
 
-    for (t_ast_node *child : *link.children)
+    for (t_ast_node *n : *end.children)
       {
-	switch (child->type)
+	if (n->type == nts::STRING)
 	  {
-	  case ASTNodeType::NEWLINE:
-	    break;
-	  case ASTNodeType::STRING:
-	    if (val != "")
-	      throw LexicalOrSyntacticError("Lexical or syntaxic error");
-	    val = child->value;
-	    break;
-	  default:
-	    throw LexicalOrSyntacticError("Lexical or syntaxic error");
+	    pin = n->value;
+	    ++p;
+	  }
+	else
+	  {
+	    throw LexicalOrSyntacticError("Invalid link end definition");
 	  }
       }
-
-    if (m_input.find(name) != m_input.end())
-      res.first = m_input[name].get();
-    else if (m_component.find(name) != m_component.end())
-      res.first = m_component[name].get();
-    else if (m_output.find(name) != m_output.end())
+    if (std::find(m_component.begin(), m_component.end(), end.value) ==
+        m_component.end())
       {
-	res.first = m_output[name].first.get();
-	m_output[name].second = true;
+	throw LexicalOrSyntacticError("Unknown component '" + end.value +
+	                              "' in link definition");
       }
-    else
-      throw LexicalOrSyntacticError("A component name is unknown");
-
-    for (char c : val)
-      if (std::isdigit(c) == false)
-	throw LexicalOrSyntacticError("Lexical or syntaxic error");
-    res.second = std::atoi(val.c_str());
-    return (res);
+    if (m_output.find(end.value) != m_output.end())
+      {
+	m_output[end.value] = true;
+      }
   }
 
   //
