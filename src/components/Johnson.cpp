@@ -21,6 +21,7 @@ namespace nts
     m_lastClk = nts::UNDEFINED;
   }
 
+  // TODO: rm, MR fait a la fin, decalage tableau meme pas de count
   void Johnson::doOperation()
   {
     Tristate mr = m_pins[14]->getValue();

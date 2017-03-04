@@ -41,7 +41,7 @@ namespace nts
          (m_addrInput[4]->getValue() << 3) |
          (m_addrInput[6]->getValue() << 4) |
          (m_addrInput[7]->getValue() << 5) | (m_addrInput[9]->getValue() << 6);
-    requ_byte = m_buff[(y * x)];
+    requ_byte = m_buff[(y + x * 128)];
     if (!m_chipEnable->getValue())
       {
 	// Mode DESELECT
@@ -60,7 +60,7 @@ namespace nts
 	      {
 		requ_byte |= m_dataIO[i]->getValue() << i;
 	      }
-	    m_buff[(y * x)] = requ_byte;
+	    m_buff[(y + x * 128)] = requ_byte;
 	  }
 	else if (!m_outputEnable->getValue())
 	  {

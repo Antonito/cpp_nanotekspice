@@ -19,7 +19,7 @@ namespace nts
     Pin *m_data[8];
     Pin *m_outEnable;
     Pin *m_chipEnable;
-    char m_file[16384];
+    char m_file[16384 / 8];
   };
 }
 
