@@ -127,9 +127,13 @@ namespace nts
 
     for (t_ast_node *n : *component.children)
       {
+		if (s > 2)
+		{
+			throw LexicalOrSyntacticError("Invalid component definition");
+		}
 	if (n->type == ASTNodeType::STRING)
 	  {
-		val[s] == n->value;
+		val[s] = n->value;
 	    s++;
 	  }
 
@@ -139,17 +143,14 @@ namespace nts
 	        "Invalid element in component definition");
 	  }
       }
+
     if (s < 1)
       {
 	throw LexicalOrSyntacticError(
 	    "Invalid component definition (missing name)");
       }
-    else if (s > 2)
-      {
-	throw LexicalOrSyntacticError("Invalid component definition");
-      }
 
-    if (std::find(m_component.begin(), m_component.end(), val[0]) ==
+    if (std::find(m_component.begin(), m_component.end(), val[0]) !=
         m_component.end())
       {
 		throw LexicalOrSyntacticError(
