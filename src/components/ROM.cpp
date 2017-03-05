@@ -61,7 +61,7 @@ namespace nts
 	    (m_addrInput[10]->getValue() << 6);
 	if (m_outEnable->getValue())
 	  {
-	    requ_byte = m_file[y + x * 128];
+	    requ_byte = m_file[y * 128 + x];
 	    for (size_t i = 0; i < 8; ++i)
 	      {
 		m_data[i]->setValue(((requ_byte & (1 << i)) != 0)
