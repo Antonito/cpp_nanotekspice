@@ -8,7 +8,7 @@
 #include "InvalidInput.hpp"
 #include "UnknownComponent.hpp"
 #include "Parser.hpp"
-#pragma message("REMOVE THOSE AUTOs")
+
 namespace nts
 {
   bool   Simulator::m_looping = false;
@@ -47,25 +47,25 @@ namespace nts
   void Simulator::simulate()
   {
     Simulator::m_simId++;
-    for (auto &i : m_output)
+    for (std::pair<const std::string, std::unique_ptr<Output>> &i : m_output)
       i.second->getValue();
-    for (auto &i : m_input)
+    for (std::pair<const std::string, std::unique_ptr<Input>> &i : m_input)
       i.second->update();
   }
 
   void Simulator::dump() const
   {
-    for (auto &i : m_input)
+    for (std::pair<const std::string, std::unique_ptr<Input>> const &i : m_input)
       {
 	std::cout << i.first << " ";
 	i.second->Dump();
       }
-    for (auto &i : m_component)
+    for (std::pair<const std::string, std::unique_ptr<IComponent>> const &i : m_component)
       {
 	std::cout << i.first << " ";
 	i.second->Dump();
       }
-    for (auto &i : m_output)
+    for (std::pair<const std::string, std::unique_ptr<Output>> const &i : m_output)
       {
 	std::cout << i.first << " ";
 	i.second->Dump();
