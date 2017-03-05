@@ -1,7 +1,10 @@
 #include <iostream>
+#include <fstream>
 #include "Simulator.hpp"
+#include "BadParameter.hpp"
+#include "Parser.hpp"
 
-#define TRYIT
+#define TRYIT_
 
 int main(int ac, char **av)
 {
@@ -16,8 +19,29 @@ int main(int ac, char **av)
   try
     {
 #endif
-      nts::Simulator simulator(av[1], &av[2], ac - 2);
-      std::string    command;
+      std::ifstream file(av[1]);
+
+      if (file.is_open() == false)
+	{
+	  throw nts::BadParameter("Invalid file name");
+	}
+
+      nts::Parser            parser;
+      std::stringstream ss;
+
+      ss << file.rdbuf();
+
+      parser.feed(ss.str());
+      file.close();
+
+      nts::t_ast_node *root = parser.createTree();
+
+      parser.parseTree(*root);
+
+      nts::Simulator simulator(*root, &av[2], ac - 2);
+      parser.deleteTree(root);
+
+      std::string command;
 
       std::cout << "> " << std::flush;
       while (getline(std::cin, command))

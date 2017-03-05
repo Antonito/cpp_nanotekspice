@@ -20,28 +20,9 @@ namespace nts
       Simulator::m_looping = false;
   }
 
-  Simulator::Simulator(char const *fileName, char *param[], size_t n)
+  Simulator::Simulator(t_ast_node &root, char *param[], size_t n)
   {
-    std::ifstream file(fileName);
-
-    if (file.is_open())
-      {
-	Parser            parser;
-	std::stringstream ss;
-
-	ss << file.rdbuf();
-
-	parser.feed(ss.str());
-	file.close();
-
-	nts::t_ast_node *root = parser.createTree();
-
-	parser.parseTree(*root);
-	m_input = parser.getInput();
-	m_component = parser.getComponent();
-	m_output = parser.getOutput();
-	parser.deleteTree(root);
-	root = nullptr;
+	this->init(root);
 
 	for (size_t i = 0; i < n; ++i)
 	  this->setInput(std::string(param[i]), true);
@@ -57,11 +38,6 @@ namespace nts
 	signal(SIGINT, &Simulator::loopingSignal);
 	this->simulate();
 	this->display();
-      }
-    else
-      {
-	throw BadParameter("Invalid file name");
-      }
   }
 
   Simulator::~Simulator()
@@ -175,5 +151,119 @@ namespace nts
   size_t Simulator::simId()
   {
     return (Simulator::m_simId);
+  }
+
+  void Simulator::init(t_ast_node &root)
+  {
+	  for (t_ast_node *n : *root.children)
+	  {
+		  if (n->type == ASTNodeType::SECTION)
+		  {
+			  if (n->value[0] == 'c')
+			  {
+				  this->initChipsets(*n);
+			  }
+			  else
+			  {
+				  this->initLinks(*n);
+			  }
+		  }
+	  }
+  }
+
+  void Simulator::initChipsets(t_ast_node &section)
+  {
+	  for (t_ast_node *n : *section.children)
+	  {
+		  if (n->type == ASTNodeType::COMPONENT)
+		  {
+			  this->initComponent(*n);
+		  }
+	  }
+  }
+
+  void Simulator::initLinks(t_ast_node &section)
+  {
+	  for (t_ast_node *n : *section.children)
+	  {
+		  if (n->type == ASTNodeType::LINK)
+		  {
+			  this->initLink(*n);
+		  }
+	  }
+  }
+
+  void Simulator::initComponent(t_ast_node &comp)
+  {
+	  int s = 0;
+	  std::string val[2];
+
+	  for (t_ast_node *n : *comp.children)
+	  {
+		  if (n->type == ASTNodeType::STRING)
+		  {
+			  val[s] = n->value;
+			  ++s;
+		  }
+	  }
+	  if (comp.value == "input")
+	  {
+		  m_input[val[0]] = std::make_unique<Input>(Input::INPUT, val[1]);
+	  }
+	  else if (comp.value == "clock")
+	  {
+		  m_input[val[0]] = std::make_unique<Input>(Input::CLOCK, val[1]);
+	  }
+	  else if (comp.value == "output")
+	  {
+		  m_output[val[0]] = std::make_unique<Output>();
+	  }
+	  else
+	  {
+		  m_component[val[0]] = std::unique_ptr<IComponent>(m_factory.createComponent(comp.value, val[1]));
+	  }
+  }
+
+  void Simulator::initLink(t_ast_node &link)
+  {
+	  std::pair<IComponent *, int> ends[2];
+	  int e = 0;
+
+	  for (t_ast_node *n : *link.children)
+	  {
+		  if (n->type == ASTNodeType::LINK_END)
+		  {
+			  ends[e] = this->initLinkEnd(*n);
+			  ++e;
+		  }
+	  }
+	  ends[0].first->SetLink(ends[0].second, *ends[1].first, ends[1].second);
+	  ends[1].first->SetLink(ends[1].second, *ends[0].first, ends[0].second);
+  }
+
+  std::pair<IComponent *, int> Simulator::initLinkEnd(t_ast_node &end)
+  {
+	  std::pair<IComponent *, int> link;
+
+	  for (t_ast_node *n: *end.children)
+	  {
+		  if (n->type == ASTNodeType::STRING)
+		  {
+			  link.second = std::stoi(n->value);
+		  }
+	  }
+	  if (m_input.count(end.value))
+	  {
+		  link.first = m_input[end.value].get();
+	  }
+	  else if (m_component.count(end.value))
+	  {
+		  link.first = m_component[end.value].get();
+	  }
+	  else
+	  {
+		  link.first = m_output[end.value].get();
+	  }
+	  return (link);
   }
 }

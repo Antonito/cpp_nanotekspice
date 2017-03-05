@@ -1,5 +1,6 @@
 #include <iostream>
 #include <stdexcept>
+#include <algorithm>
 #include "LexicalOrSyntacticError.hpp"
 #include "Parser.hpp"
 #include "Output.hpp"
@@ -55,7 +56,7 @@ namespace nts
 
     for (t_ast_node *n : *root.children)
       {
-	if (n->type == nts::SECTION)
+	if (n->type == ASTNodeType::SECTION)
 	  {
 	    if (this->parseSection(*n) != s)
 	      {
@@ -63,14 +64,14 @@ namespace nts
 	      }
 	    ++s;
 	  }
-	else if (n->type != nts::NEWLINE)
+	else if (n->type != ASTNodeType::NEWLINE)
 	  {
 	    throw LexicalOrSyntacticError("Invalid element");
 	  }
       }
   }
 
-  void Parser::parseSection(t_ast_node &section)
+  int Parser::parseSection(t_ast_node &section)
   {
     if (section.value == "chipsets")
       {
@@ -90,13 +91,13 @@ namespace nts
 
   void Parser::parseChipsets(t_ast_node &section)
   {
-    for (t_ast_node *n : *root.children)
+    for (t_ast_node *n : *section.children)
       {
-	if (n->type == nts::COMPONENT)
+	if (n->type == ASTNodeType::COMPONENT)
 	  {
 	    this->parseComponent(*n);
 	  }
-	else if (n->type != nts::NEWLINE)
+	else if (n->type != ASTNodeType::NEWLINE)
 	  {
 	    throw LexicalOrSyntacticError(
 	        "Invalid element in chipsets section");
@@ -106,13 +107,13 @@ namespace nts
 
   void Parser::parseLinks(t_ast_node &section)
   {
-    for (t_ast_node *n : *root.children)
+    for (t_ast_node *n : *section.children)
       {
-	if (n->type == nts::LINK)
+	if (n->type == ASTNodeType::LINK)
 	  {
 	    this->parseLink(*n);
 	  }
-	else if (n->type != nts::NEWLINE)
+	else if (n->type != ASTNodeType::NEWLINE)
 	  {
 	    throw LexicalOrSyntacticError("Invalid element in links section");
 	  }
@@ -121,12 +122,14 @@ namespace nts
 
   void Parser::parseComponent(t_ast_node &component)
   {
-    int s = 0;
+	  std::string val[2];
+	  int s = 0;
 
-    for (t_ast_node *n : *root.children)
+    for (t_ast_node *n : *component.children)
       {
-	if (n->type == nts::STRING)
+	if (n->type == ASTNodeType::STRING)
 	  {
+		val[s] == n->value;
 	    s++;
 	  }
 
@@ -146,18 +149,18 @@ namespace nts
 	throw LexicalOrSyntacticError("Invalid component definition");
       }
 
-    if (std::find(m_component.begin(), m_component.end(), s[0]) ==
+    if (std::find(m_component.begin(), m_component.end(), val[0]) ==
         m_component.end())
       {
-	throw LexicalOrSyntacticError(
-	    "There are more than one component with name '" + s[0] + "'")
+		throw LexicalOrSyntacticError(
+			"There are more than one component with name '" + val[0] + "'");
       }
 
-    if (n->value == "output")
+    if (component.value == "output")
       {
-	m_output[s[0]] = false;
+	m_output[val[0]] = false;
       }
-    m_component.push_back[s[0]];
+    m_component.push_back(val[0]);
   }
 
   void Parser::parseLink(t_ast_node &link)
@@ -166,7 +169,7 @@ namespace nts
 
     for (t_ast_node *n : *link.children)
       {
-	if (n->type == nts::LINK_END)
+	if (n->type == ASTNodeType::LINK_END)
 	  {
 	    this->parseLinkEnd(*n);
 	    ++l;
@@ -189,7 +192,7 @@ namespace nts
 
     for (t_ast_node *n : *end.children)
       {
-	if (n->type == nts::STRING)
+	if (n->type == ASTNodeType::STRING)
 	  {
 	    pin = n->value;
 	    ++p;
@@ -648,29 +651,5 @@ namespace nts
     m_str.str("");
     m_str.clear();
     m_str << clear.str();
-  }
-
-  std::map<std::string, std::shared_ptr<Input>> const &Parser::getInput() const
-  {
-    return (m_input);
-  }
-
-  std::map<std::string, std::shared_ptr<IComponent>> const &
-      Parser::getComponent() const
-  {
-    return (m_component);
-  }
-
-  std::map<std::string, std::shared_ptr<Output>> Parser::getOutput() const
-  {
-    std::map<std::string, std::shared_ptr<Output>> res;
-
-    for (auto &e : m_output)
-      {
-	if (e.second.second == false)
-	  throw InvalidInput("Not every output is linked");
-	res[e.first] = e.second.first;
-      }
-    return (res);
   }
 }

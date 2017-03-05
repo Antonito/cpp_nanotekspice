@@ -27,7 +27,7 @@ namespace nts
     void deleteTree(t_ast_node *root) const;
 
   private:
-    void parseSection(t_ast_node &section);
+    int parseSection(t_ast_node &section);
     void parseChipsets(t_ast_node &section);
     void parseLinks(t_ast_node &section);
     void parseComponent(t_ast_node &component);

@@ -6,6 +6,8 @@
 #include <string>
 #include <memory>
 #include "IComponent.hpp"
+#include "cpp_nanoTekSpice_parser.hpp"
+#include "ComponentFactory.hpp"
 
 namespace nts
 {
@@ -15,7 +17,7 @@ namespace nts
   class Simulator
   {
   public:
-    explicit Simulator(char const *fileName, char *param[], size_t n);
+    explicit Simulator(t_ast_node &root, char *param[], size_t n);
     Simulator(Simulator const &other) = delete;
     ~Simulator();
     Simulator &operator=(Simulator const &other) = delete;
@@ -30,9 +32,17 @@ namespace nts
     void setInput(std::string const &command, bool set = false);
     void display() const;
 
-    std::map<std::string, std::shared_ptr<Input>>      m_input;
-    std::map<std::string, std::shared_ptr<IComponent>> m_component;
-    std::map<std::string, std::shared_ptr<Output>>     m_output;
+	void init(t_ast_node &root);
+	void initChipsets(t_ast_node &section);
+	void initLinks(t_ast_node &section);
+	void initComponent(t_ast_node &comp);
+	void initLink(t_ast_node &link);
+	std::pair<IComponent *, int> initLinkEnd(t_ast_node &end);
+
+    std::map<std::string, std::unique_ptr<Input>>      m_input;
+    std::map<std::string, std::unique_ptr<IComponent>> m_component;
+    std::map<std::string, std::unique_ptr<Output>>     m_output;
+	ComponentFactory m_factory;
     static bool   m_looping;
     static size_t m_simId;
   };
