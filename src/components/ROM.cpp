@@ -8,7 +8,7 @@ namespace nts
 {
   ROM::ROM(std::string const &type, std::string const &value) : Component(type)
   {
-    std::ifstream file(value, std::ios::binary);
+    std::ifstream file((value != "") ? value : "rom.bin", std::ios::binary);
     int           addrIn[] = {7, 6, 5, 4, 3, 2, 1, 0, 22, 21, 18};
     int           dataOut[] = {8, 9, 10, 12, 13, 14, 15, 16};
     struct stat   statBuf;
@@ -61,7 +61,7 @@ namespace nts
 	    (m_addrInput[10]->getValue() << 6);
 	if (m_outEnable->getValue())
 	  {
-	    requ_byte = m_file[y * x];
+	    requ_byte = m_file[y * 128 + x];
 	    for (size_t i = 0; i < 8; ++i)
 	      {
 		m_data[i]->setValue(((requ_byte & (1 << i)) != 0)
