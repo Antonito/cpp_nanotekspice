@@ -254,8 +254,7 @@ namespace nts
 	  // Other
 	  default:
 	    throw LexicalOrSyntacticError(
-	        "Invalid character in root"); // TODO: create specific
-	                                      // exception
+	        "Invalid character in root");
 	    break;
 	  }
       }
@@ -276,9 +275,7 @@ namespace nts
     else
       {
 	throw LexicalOrSyntacticError(
-	    "Section name beggining with unknown character"); // TODO: create
-	                                                      // specific
-	                                                      // exception
+	    "Section name beggining with unknown character");
       }
   }
 
@@ -314,7 +311,7 @@ namespace nts
       {
 	throw LexicalOrSyntacticError(
 	    std::string("Section name is '") + name +
-	    "' instead of 'chipsets'"); // TODO: create specific exception
+	    "' instead of 'chipsets'");
       }
 
     section->lexeme += name;
@@ -325,8 +322,7 @@ namespace nts
     if (inputChar != ':')
       {
 	throw LexicalOrSyntacticError(
-	    "Missing ':' after '.chipsets'"); // TODO: create specific
-	                                      // exception
+	    "Missing ':' after '.chipsets'");
       }
     section->lexeme += inputChar;
 
@@ -373,7 +369,7 @@ namespace nts
       {
 	throw LexicalOrSyntacticError(
 	    std::string("Section name is '") + name +
-	    "' instead of 'links'"); // TODO: create specific exception
+	    "' instead of 'links'");
       }
 
     section->lexeme += name;
@@ -384,7 +380,7 @@ namespace nts
     if (inputChar != ':')
       {
 	throw LexicalOrSyntacticError(
-	    "Missing ':' after '.links'"); // TODO: create specific exception
+	    "Missing ':' after '.links'");
       }
     section->lexeme += inputChar;
 
@@ -438,8 +434,7 @@ namespace nts
 	    break;
 	  case EOF:
 	    throw LexicalOrSyntacticError(
-	        "Unexpected EOF in link creation"); // TODO: create specific
-	                                            // exception
+	        "Unexpected EOF in link creation");
 	  default:
 	    nbLinkEnd++;
 	    link->children->push_back(this->createTreeLinkEnd());
@@ -468,9 +463,7 @@ namespace nts
 	if (inputChar == EOF)
 	  {
 	    throw LexicalOrSyntacticError(
-	        "Unexpected EOF in link_end creation (1)"); // TODO: create
-	                                                    // specific
-	                                                    // exception
+	        "Unexpected EOF in link_end creation (1)");
 	  }
 
 	if (inputChar == ':')
@@ -485,9 +478,7 @@ namespace nts
 	else
 	  {
 	    throw LexicalOrSyntacticError(
-	        "Unexpected character in link_end creation"); // TODO: create
-	                                                      // specific
-	                                                      // exception
+	        "Unexpected character in link_end creation");
 	  }
       }
 
@@ -504,9 +495,7 @@ namespace nts
 	    break;
 	  case EOF:
 	    throw LexicalOrSyntacticError(
-	        "Unexpected EOF in link_end creation (2)"); // TODO: create
-	                                                    // specific
-	                                                    // exception
+	        "Unexpected EOF in link_end creation (2)");
 	  default:
 	    end->children->push_back(this->createTreeString());
 	    return (end);
@@ -565,9 +554,7 @@ namespace nts
     if (inputChar != ' ' && inputChar != '\t')
       {
 	throw LexicalOrSyntacticError(
-	    "Missing space or tab after input chipset type"); // TODO: create
-	                                                      // specific
-	                                                      // exception
+	    "Missing space or tab after input chipset type");
       }
 
     bool gettingName = true;
@@ -582,9 +569,7 @@ namespace nts
 	    break;
 	  case '\n':
 	    throw LexicalOrSyntacticError(
-	        "Unexpected EOL in input chipset creation"); // TODO: create
-	                                                     // specific
-	                                                     // exception
+	        "Unexpected EOL in input chipset creation");
 	  default:
 	    chipset->children->push_back(this->createTreeString());
 	    gettingName = false;
@@ -610,10 +595,7 @@ namespace nts
 	    if (inputChar != ')')
 	      {
 		throw LexicalOrSyntacticError(
-		    "Missing ')' after input chipset value declaration"); // TODO:
-		// create
-		// specific
-		// exception
+		    "Missing ')' after input chipset value declaration");
 	      }
 	    return (chipset);
 	  default:

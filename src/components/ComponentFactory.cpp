@@ -107,7 +107,7 @@ namespace nts
       {
 	throw BadParameter("4013 chipset doesn't need input value");
       }
-    return (new DualFlipFlop("4013")); // TODO: implement
+    return (new DualFlipFlop("4013"));
   }
 
   // 4017 10bits Johnson decade
