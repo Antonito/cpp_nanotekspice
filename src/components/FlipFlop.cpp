@@ -25,7 +25,7 @@ namespace nts
 	m_pins[4]->setValue(nts::UNDEFINED);
 	m_pins[5]->setValue(nts::UNDEFINED);
       }
-    else if (set != nts::FALSE && reset != nts::FALSE)
+    else if (set != nts::FALSE || reset != nts::FALSE)
       {
 	m_pins[4]->setValue(reset);
 	m_pins[5]->setValue(set);
