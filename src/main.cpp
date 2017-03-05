@@ -4,8 +4,6 @@
 #include "BadParameter.hpp"
 #include "Parser.hpp"
 
-#define TRYIT_
-
 int main(int ac, char **av)
 {
 
@@ -15,10 +13,8 @@ int main(int ac, char **av)
       return (1);
     }
 
-#ifdef TRYIT
   try
     {
-#endif
       std::ifstream file(av[1]);
 
       if (file.is_open() == false)
@@ -57,13 +53,11 @@ int main(int ac, char **av)
 	    }
 	  std::cout << "> " << std::flush;
 	}
-#ifdef TRYIT
     }
   catch (std::exception &e)
     {
       std::cerr << "Fatal error: " << e.what() << std::endl;
       return (1);
     }
-#endif
   return (0);
 }
